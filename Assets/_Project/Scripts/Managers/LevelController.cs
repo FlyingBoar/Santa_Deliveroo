@@ -26,8 +26,8 @@ public class LevelController : MonoBehaviour
         rtsCtrl = FindObjectOfType< RTSController>();
 
         inputCtrl.Setup(cameraCtrl, rtsCtrl);
-        cameraCtrl.Setup();
         rtsCtrl.Setup();
+        cameraCtrl.Setup(GetInputController.isRTSView);
     }
 
 
@@ -36,7 +36,7 @@ public class LevelController : MonoBehaviour
         get { return cameraCtrl; }
     }
 
-    public PlayerInputController GetPlayerInputController
+    public PlayerInputController GetInputController
     {
         get { return inputCtrl; }
     }

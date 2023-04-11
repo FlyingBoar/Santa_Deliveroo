@@ -10,15 +10,18 @@ public class CameraController : MonoBehaviour
     float movementSpeed = 10;
     [SerializeField]
     float rotationSpeed = 10;
+
+    bool isMouseRotationEnable;
     Vector2 mouseRotation;
 
     Transform tacticalView;
     Vector3 origianlLocation;
     Quaternion origianlRotation;
 
-    public void Setup()
+    public void Setup(bool _isRTSViewEnabled)
     {
         tacticalView = FindObjectsOfType<Transform>().First(x => x.tag == "TacticalView");
+        isMouseRotationEnable = !_isRTSViewEnabled;
     }
 
     public void DetectInput()
@@ -44,22 +47,27 @@ public class CameraController : MonoBehaviour
         // Altitude input
         if (Input.GetKey(KeyCode.E))
         {
-            transform.localPosition += (transform.up * Time.deltaTime * movementSpeed);
+            transform.localPosition += (Vector3.up * Time.deltaTime * movementSpeed);
         }
         if (Input.GetKey(KeyCode.Q))
         {
-            transform.localPosition -= (transform.up * Time.deltaTime * movementSpeed);
+            transform.localPosition -= (Vector3.up * Time.deltaTime * movementSpeed);
         }
 
         // Mouse rotation
-        mouseRotation.x += Input.GetAxis("Mouse X") * rotationSpeed;
-        transform.localRotation = Quaternion.Euler(0, mouseRotation.x, 0);
+        if (isMouseRotationEnable)
+        {
+            mouseRotation.x += Input.GetAxis("Mouse X") * rotationSpeed;
+            mouseRotation.y -= Input.GetAxis("Mouse Y") * rotationSpeed;
+            transform.localRotation = Quaternion.Euler(mouseRotation.y, mouseRotation.x, 0); 
+        }
     }
 
     public void SwitchView(bool _isRtsView)
     {
         if (_isRtsView)
         {
+            isMouseRotationEnable = false;
             origianlLocation = transform.localPosition;
             origianlRotation = transform.rotation;
             transform.DOMove(tacticalView.position, 1.5f);
@@ -67,8 +75,8 @@ public class CameraController : MonoBehaviour
         }
         else
         {
+            transform.DOMove(origianlLocation, 1.5f).OnComplete(() => { isMouseRotationEnable = true; });
             transform.DORotateQuaternion(origianlRotation, 1.5f);
-            transform.DOMove(origianlLocation, 1.5f);
         }
 
     }

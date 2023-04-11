@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerInputController : MonoBehaviour
 {
-    bool isRTSView = false;
+    public bool isRTSView { get; private set; }
     CameraController cameraCtrl;
     RTSController rtsCtrl;
 
@@ -14,6 +14,7 @@ public class PlayerInputController : MonoBehaviour
     {
         cameraCtrl = _cameraCtrl;
         rtsCtrl = _rtsCtrl;
+        isRTSView = false;
     }
 
     // Update is called once per frame
