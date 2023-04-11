@@ -11,6 +11,11 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     float rotationSpeed = 10;
 
+    [SerializeField]
+    float cameraAnimationSpeed = 1.5f;
+
+    Transform camTransform;
+
     bool isMouseRotationEnable;
     Vector2 mouseRotation;
 
@@ -21,7 +26,8 @@ public class CameraController : MonoBehaviour
     public void Setup(bool _isRTSViewEnabled)
     {
         tacticalView = FindObjectsOfType<Transform>().First(x => x.tag == "TacticalView");
-        isMouseRotationEnable = !_isRTSViewEnabled;
+        camTransform = Camera.main.GetComponent<Transform>();
+        UpdateMouseActivationStatus();
     }
 
     public void DetectInput()
@@ -29,29 +35,29 @@ public class CameraController : MonoBehaviour
         // Movement input
         if (Input.GetKey(KeyCode.W))
         {
-            transform.localPosition += (transform.forward * Time.deltaTime * movementSpeed);
+            camTransform.localPosition += (camTransform.forward * Time.deltaTime * movementSpeed);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.localPosition -= (transform.forward * Time.deltaTime * movementSpeed);
+            camTransform.localPosition -= (camTransform.forward * Time.deltaTime * movementSpeed);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.localPosition += (transform.right * Time.deltaTime * movementSpeed);
+            camTransform.localPosition += (camTransform.right * Time.deltaTime * movementSpeed);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.localPosition -= (transform.right * Time.deltaTime * movementSpeed);
+            camTransform.localPosition -= (camTransform.right * Time.deltaTime * movementSpeed);
         }
 
         // Altitude input
         if (Input.GetKey(KeyCode.E))
         {
-            transform.localPosition += (Vector3.up * Time.deltaTime * movementSpeed);
+            camTransform.localPosition += (Vector3.up * Time.deltaTime * movementSpeed);
         }
         if (Input.GetKey(KeyCode.Q))
         {
-            transform.localPosition -= (Vector3.up * Time.deltaTime * movementSpeed);
+            camTransform.localPosition -= (Vector3.up * Time.deltaTime * movementSpeed);
         }
 
         // Mouse rotation
@@ -59,26 +65,41 @@ public class CameraController : MonoBehaviour
         {
             mouseRotation.x += Input.GetAxis("Mouse X") * rotationSpeed;
             mouseRotation.y -= Input.GetAxis("Mouse Y") * rotationSpeed;
-            transform.localRotation = Quaternion.Euler(mouseRotation.y, mouseRotation.x, 0); 
+
+            mouseRotation.y = Mathf.Clamp(mouseRotation.y, -90, 90);
+
+            camTransform.localRotation = Quaternion.Euler(mouseRotation.y, mouseRotation.x, 0);
         }
     }
 
+    /// <summary>
+    /// Camera animation for the game mode
+    /// </summary>
+    /// <param name="_isRtsView"></param>
     public void SwitchView(bool _isRtsView)
     {
         if (_isRtsView)
         {
-            isMouseRotationEnable = false;
-            origianlLocation = transform.localPosition;
-            origianlRotation = transform.rotation;
-            transform.DOMove(tacticalView.position, 1.5f);
-            transform.DORotateQuaternion(tacticalView.rotation, 1.5f);
+            UpdateMouseActivationStatus();
+            origianlLocation = camTransform.localPosition;
+            origianlRotation = camTransform.rotation;
+            camTransform.DOMove(tacticalView.position, cameraAnimationSpeed);
+            camTransform.DORotateQuaternion(tacticalView.rotation, cameraAnimationSpeed);
         }
         else
         {
-            transform.DOMove(origianlLocation, 1.5f).OnComplete(() => { isMouseRotationEnable = true; });
-            transform.DORotateQuaternion(origianlRotation, 1.5f);
+            camTransform.DOMove(origianlLocation, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
+            camTransform.DORotateQuaternion(origianlRotation, cameraAnimationSpeed);
         }
 
+    }
+
+    /// <summary>
+    /// Update the status of the mouse related to the current game mode (RTS or Fly)
+    /// </summary>
+    void UpdateMouseActivationStatus()
+    {
+        isMouseRotationEnable = !LevelController.I.GetInputController.isRTSView;
     }
 
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class Destination : MonoBehaviour
+public class Destination : MonoBehaviour, IDestination
 {
     Transform destinationPoint;
 
@@ -16,5 +16,15 @@ public class Destination : MonoBehaviour
     public Vector3 GetDestinationPosition()
     {
         return destinationPoint.position;
+    }
+
+    public void OnClickOver()
+    {
+        // Highlight + Get informations
+    }
+
+    public void OnDeselect()
+    {
+        // rimuove Highlight + informations
     }
 }

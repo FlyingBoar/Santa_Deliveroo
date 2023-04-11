@@ -34,9 +34,20 @@ public class RTSController : MonoBehaviour
         }
         if (Input.GetMouseButton(1))
         {
-            OnRightClickActions();
+            bool isQueued = false;
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                isQueued = true;
+            }
+            OnRightClickActions(isQueued);
         }
     }
+
+    public Santa GetFirstAvailableAgent() 
+    {
+        return allUnits.First();
+    }
+
 
     /// <summary>
     /// Actions to perform on left click
@@ -67,7 +78,7 @@ public class RTSController : MonoBehaviour
     /// <summary>
     /// Actions to perform on right click
     /// </summary>
-    void OnRightClickActions()
+    void OnRightClickActions(bool _isQueued)
     {
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -76,14 +87,14 @@ public class RTSController : MonoBehaviour
         // Check se è stato colpito un oggetto interattivo
         if (Physics.Raycast(ray, out hit, 500.0f, _INTERACTABLE_LAYER))
         {
-            Destination destination = hit.collider.GetComponent<Destination>() != null ? hit.collider.GetComponent<Destination>() : hit.collider.GetComponentInParent<Destination>();
+            IDestination destination = hit.collider.GetComponent<IDestination>() != null ? hit.collider.GetComponent<IDestination>() : hit.collider.GetComponentInParent<IDestination>();
 
             if (selectedUnit != null)
             {
                 if (destination != null)
                 {
                     // sposta l'unità sulla destinazione (pacco o casa)
-                    (selectedUnit as IMooveAndInteract).OnAction(destination.GetDestinationPosition());
+                    (selectedUnit as IMooveAndInteract).OnAction(destination, _isQueued);
                 }
             }
         }
@@ -92,7 +103,7 @@ public class RTSController : MonoBehaviour
         {
             if (selectedUnit != null)
             {
-                (selectedUnit as IMooveAndInteract).OnAction(hit.point);
+                (selectedUnit as IMooveAndInteract).OnAction(hit.point,_isQueued);
             }
         }
 
