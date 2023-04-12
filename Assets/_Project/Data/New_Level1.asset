@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: New_Level1
   m_EditorClassIdentifier: 
   ActiveHouses: 10
+  MinScoreToWin: 6
+  LevelTimerSec: 120
+  EnemySpeed: 6
   ActiveEnemies: 1
   UnitsInLevel: 3
   SantaSpeed: 10
   SantaSlowedAfterPickup: 0.5
-  EnemySpeed: 6

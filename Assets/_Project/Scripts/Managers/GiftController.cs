@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,25 +6,31 @@ using UnityEngine.AI;
 
 public class GiftController : MonoBehaviour
 {
-    [SerializeField]
-    Gift GiftPrefab;
     NavMeshController navMeshCtrl;
+    float slowAfterPickup;
 
     public void Init()
     {
         navMeshCtrl = LevelController.I.GetNavMeshCtrl();
-        
+
+        int giftAmountInLvl = LevelController.I.LevelData.MinScoreToWin;
+        slowAfterPickup = LevelController.I.LevelData.SantaSlowedAfterPickup;
         //per ogni casa
-        for(int i = 0; i < 5;  i++)
+        for (int i = 0; i < giftAmountInLvl;  i++)
         {
             //per ogni regalo che deve avere la casa, genera un regalo (2 cicli innestati)
-            Spawn(navMeshCtrl.GetRandomLocation());
+            Gift g = Spawn(navMeshCtrl.GetRandomLocation());
+            g.Init(new GiftData { destination = null, SlowedAfterPickup = slowAfterPickup });
         }
     }
 
-    void Spawn(Vector3 spawnPos)
+    internal void GifCollected(Gift gift)
     {
-        //Gift newGift = Instantiate(GiftPrefab, spawnPos, Quaternion.identity);
-        Gift newGift = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(spawnPos);
+        LevelController.I.GetPoolManager().RetrievePoollable(gift);
+    }
+
+    Gift Spawn(Vector3 spawnPos)
+    {
+        return LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(spawnPos);
     }
 }

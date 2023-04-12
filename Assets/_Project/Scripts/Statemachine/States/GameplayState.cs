@@ -13,7 +13,7 @@ public class GameplayState : StateMachineBehaviour
 
         //LC.GetUIManager().ChangeMenu(UIManager.MenuType.Gameplay);
         LC.GetGiftController().Init();
-        LC.GetRTSController().Init(LC.currentLevel);
+        LC.GetRTSController().Init(LC.LevelData);
         LC.IsGameplayStatus();
     }
 }

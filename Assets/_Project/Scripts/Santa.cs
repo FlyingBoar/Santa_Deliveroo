@@ -12,6 +12,9 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     LineRenderer lineRenderer;
 
     List<movementInformation> queuedActions = new List<movementInformation>();
+    List<GiftData> giftCollected = new List<GiftData>();
+
+    IDestination currentDestination = null;
 
     public void Setup(float _unitSpeed)
     {
@@ -43,9 +46,12 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         }
     }
 
-    void SelectedUnit(bool _isSelected)
+    public void RemoveGifts(List<GiftData> _giftToRemove)
     {
-        selected.enabled = _isSelected;
+        foreach (var item in _giftToRemove)
+        {
+            giftCollected.Remove(item);
+        }
     }
 
     public void OnClickOver()
@@ -63,27 +69,16 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         if (agent != null)
         {
             Vector3 interactablePosition = destination.GetDestinationPosition();
-            movementInformation movement = new movementInformation { position = interactablePosition, interactable = destination };
-            if (_isQueuedAction)
-            {
-                queuedActions.Add(movement);
-            }
-            else
-            {
-                if (queuedActions.Count > 0)
-                {
-                    queuedActions.Clear();
-                }
-                SetAgentDestination(movement);
-            }
+            OnAction(interactablePosition, _isQueuedAction, destination);
         }
     }
 
-    public void OnAction(Vector3 moveTo, bool _isQueueAction = false)
+    public void OnAction(Vector3 moveTo, bool _isQueueAction = false, IDestination destination = null)
     {
         if (agent != null)
         {
-            movementInformation movement = new movementInformation { position = moveTo, interactable = null };
+            currentDestination = destination;
+            movementInformation movement = new movementInformation { position = moveTo, interactable = destination };
 
             if (_isQueueAction)
             {
@@ -98,6 +93,40 @@ public class Santa : PoolObjectBase, IMooveAndInteract
                 SetAgentDestination(movement);
             }
         }
+    }
+
+    /// <summary>
+    /// Add the given gift to collected gift if not already collected
+    /// </summary>
+    /// <param name="data"></param>
+    public void CollectGift(GiftData data)
+    {
+        if(giftCollected.Contains(data))
+        {
+            return;
+        }
+
+        giftCollected.Add(data);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //TODO: questo controllo deve essere effettuato sia per i regali che per le abitazioni
+        IDestination d = other.GetComponentInParent<IDestination>();
+        if(d != null && d == currentDestination)
+        {
+            d.AgentOnDestination(this);
+        }
+    }
+
+    public List<GiftData> GetCollectedGifts()
+    {
+        return giftCollected;
+    }
+
+    void SelectedUnit(bool _isSelected)
+    {
+        selected.enabled = _isSelected;
     }
 
     void SetAgentDestination(movementInformation _movement)
@@ -134,6 +163,6 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     struct movementInformation
     {
         public Vector3 position;
-        public IInteractable interactable;
+        public IDestination interactable;
     }
 }

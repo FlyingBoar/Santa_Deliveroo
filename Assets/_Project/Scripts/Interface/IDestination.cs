@@ -6,4 +6,6 @@ using UnityEngine;
 public interface IDestination : IInteractable
 {
     Vector3 GetDestinationPosition();
+
+    void AgentOnDestination(Santa _agent);
 }

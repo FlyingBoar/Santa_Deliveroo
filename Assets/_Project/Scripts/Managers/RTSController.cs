@@ -39,11 +39,11 @@ public class RTSController : MonoBehaviour
     /// </summary>
     public void DetectInput()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             OnLeftClickActions();
         }
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(1))
         {
             bool isQueued = false;
             if (Input.GetKey(KeyCode.LeftControl))

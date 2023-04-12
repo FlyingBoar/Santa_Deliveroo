@@ -127,7 +127,9 @@ public class LevelController : MonoBehaviour
     #endregion
 
     public static LevelController I;
-    public LevelData currentLevel; //TODO: caricare dinamicamente
+    public LevelData LevelData; //TODO: caricare dinamicamente
+
+    private int _victoryPoints;
 
     public bool IsGameplay { get; private set; }
 
@@ -154,6 +156,12 @@ public class LevelController : MonoBehaviour
     public void IsGameplayStatus()
     {
         IsGameplay = true;
+    }
+
+    public void AddVictoryPoints(int _pointsToAdd)
+    {
+        _victoryPoints += _pointsToAdd;
+        // check per le condizioni di vittoria
     }
 
     #region SM triggers
