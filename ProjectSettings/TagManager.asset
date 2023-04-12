@@ -8,6 +8,8 @@ TagManager:
   - Santa
   - HouseDestination
   - NavMeshPanel
+  - UnitSpawn
+  - EnemySpawn
   layers:
   - Default
   - TransparentFX

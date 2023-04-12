@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActiveHouses: 10
   ActiveEnemies: 1
+  UnitsInLevel: 3
   SantaSpeed: 10
   SantaSlowedAfterPickup: 0.5
   EnemySpeed: 6

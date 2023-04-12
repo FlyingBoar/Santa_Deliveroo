@@ -13,16 +13,23 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 
     List<movementInformation> queuedActions = new List<movementInformation>();
 
-    public void Setup()
+    public void Setup(float _unitSpeed)
     {
         selected.enabled = false;
-        agent = GetComponent<NavMeshAgent>();
-        lineRenderer = GetComponent<LineRenderer>();
+        if (!agent)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+        if (!lineRenderer)
+        {
+            lineRenderer = GetComponent<LineRenderer>();
+        }
+        agent.speed = _unitSpeed;
     }
 
     private void LateUpdate()
     {
-        if (agent.hasPath)
+        if (agent && agent.hasPath)
         { 
             DrawPath(); 
         }

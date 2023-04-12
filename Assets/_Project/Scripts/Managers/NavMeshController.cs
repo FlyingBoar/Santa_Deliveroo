@@ -8,15 +8,13 @@ using static UnityEngine.GraphicsBuffer;
 public class NavMeshController : MonoBehaviour
 {
     Bounds floor;
-    float navMeshPanelHeigh;
-    NavMeshAgent agent;
+    Vector3 navMeshPanelPos;
 
     public void Setup()
     {
         var navMeshPanel = GameObject.FindGameObjectWithTag("NavMeshPanel");
         floor = navMeshPanel.GetComponent<Renderer>().bounds;
-        navMeshPanelHeigh = navMeshPanel.GetComponent<Transform>().position.y;
-        agent = LevelController.I.GetRTSController.GetFirstAvailableAgent().GetComponent<NavMeshAgent>();
+        navMeshPanelPos = navMeshPanel.GetComponent<Transform>().position;
     }
 
     public Vector3 GetRandomLocation()
@@ -24,7 +22,7 @@ public class NavMeshController : MonoBehaviour
         Vector3 randomSpot;
         do
         {
-            randomSpot = new Vector3(Random.Range(floor.min.x, floor.max.x), navMeshPanelHeigh, Random.Range(floor.min.z, floor.max.z));
+            randomSpot = new Vector3(Random.Range(floor.min.x, floor.max.x), navMeshPanelPos.y, Random.Range(floor.min.z, floor.max.z));
         } while (!isPointOnNavmesh(randomSpot));
 
         return randomSpot;
@@ -33,7 +31,7 @@ public class NavMeshController : MonoBehaviour
     bool isPointOnNavmesh(Vector3 _pos)
     {
         NavMeshPath navMeshPath = new NavMeshPath();
-        bool cancomplete = agent.CalculatePath(_pos, navMeshPath);
+        bool cancomplete = NavMesh.CalculatePath(navMeshPanelPos, _pos, 1,navMeshPath);
         if (cancomplete && navMeshPath.status == NavMeshPathStatus.PathComplete)
         {
             // the target can be reached

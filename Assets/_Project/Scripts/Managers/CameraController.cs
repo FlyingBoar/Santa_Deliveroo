@@ -99,7 +99,7 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void UpdateMouseActivationStatus()
     {
-        isMouseRotationEnable = !LevelController.I.GetInputController.isRTSView;
+        isMouseRotationEnable = !LevelController.I.GetInputController().isRTSView;
     }
 
 }

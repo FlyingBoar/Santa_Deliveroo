@@ -20,6 +20,9 @@ public class PlayerInputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!LevelController.I.IsGameplay)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SwitchView();

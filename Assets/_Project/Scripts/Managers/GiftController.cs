@@ -9,9 +9,9 @@ public class GiftController : MonoBehaviour
     Gift GiftPrefab;
     NavMeshController navMeshCtrl;
 
-    public void Setup()
+    public void Init()
     {
-        navMeshCtrl = LevelController.I.GetNavMeshCtrl;
+        navMeshCtrl = LevelController.I.GetNavMeshCtrl();
         
         //per ogni casa
         for(int i = 0; i < 5;  i++)
@@ -24,6 +24,6 @@ public class GiftController : MonoBehaviour
     void Spawn(Vector3 spawnPos)
     {
         //Gift newGift = Instantiate(GiftPrefab, spawnPos, Quaternion.identity);
-        Gift newGift = LevelController.I.GetPoolManager.GetFirstAvaiableObject<Gift>(spawnPos);
+        Gift newGift = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(spawnPos);
     }
 }

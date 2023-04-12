@@ -5,70 +5,172 @@ using UnityEngine;
 public class LevelController : MonoBehaviour
 {
 
-    #region Managers
     PlayerInputController inputCtrl;
-    public PlayerInputController GetInputController
-    {
-        get { return inputCtrl; }
-    }
-
     CameraController cameraCtrl;
-    public CameraController GetCameraController
-    {
-        get { return cameraCtrl; }
-    }
-
     RTSController rtsCtrl;
-    public RTSController GetRTSController
-    {
-        get { return rtsCtrl; }
-    }
-
     NavMeshController navMeshCtrl;
-    public NavMeshController GetNavMeshCtrl
-    {
-        get { return navMeshCtrl; }
-    } 
-
     GiftController giftCtrl;
-    public GiftController GetGiftController
+    PoolManager poolManager;
+
+    #region Get & Set
+
+    // ------------------------ GET ----------------------------- \\
+
+    /// <summary>
+    /// Ritorna il riferimento al controllore degli input
+    /// </summary>
+    /// <returns></returns>
+    public PlayerInputController GetInputController()
     {
-        get { return giftCtrl; }
+        return I.inputCtrl;
     }
 
-    PoolManager poolManager;
-    public PoolManager GetPoolManager
+    /// <summary>
+    /// Ritorna il riferimento al controllore della camera
+    /// </summary>
+    /// <returns></returns>
+    public CameraController GetCameraController()
     {
-        get { return poolManager; }
+        return I.cameraCtrl;
+    }
+
+    /// <summary>
+    /// Ritorna il riferimento al controllore della modalità RTS
+    /// </summary>
+    /// <returns></returns>
+    public RTSController GetRTSController()
+    {
+        return I.rtsCtrl;
+    }
+
+    /// <summary>
+    /// Ritorna il riferimento al controllore del nav mesh
+    /// </summary>
+    /// <returns></returns>
+    public NavMeshController GetNavMeshCtrl()
+    {
+        return I.navMeshCtrl;
+    }
+
+    /// <summary>
+    /// Ritorna il riferimento al controllore dei Gift
+    /// </summary>
+    /// <returns></returns>
+    public GiftController GetGiftController()
+    {
+        return I.giftCtrl;
+    }
+
+    /// <summary>
+    /// Ritorna il riferimento al Pool manager
+    /// </summary>
+    /// <returns></returns>
+    public PoolManager GetPoolManager()
+    {
+        return I.poolManager;
+    }
+
+    //// ------------------------ SET ----------------------------- \\
+    
+    /// <summary>
+    /// Setta il riferimento al controller degli input
+    /// </summary>
+    /// <param name="_inputController"></param>
+    public void SetInputController(PlayerInputController _inputController)
+    {
+        I.inputCtrl = _inputController;
+    }
+    /// <summary>
+    /// Setta il riferimento al controller della camera
+    /// </summary>
+    /// <param name="_cameraController"></param>
+    public void SetCameraController(CameraController _cameraController)
+    {
+        I.cameraCtrl = _cameraController;
+    }
+
+    /// <summary>
+    /// Setta il riferimento al controller della modalità RTS
+    /// </summary>
+    /// <param name="_rtsCtrl"></param>
+    public void SetRtsController(RTSController _rtsCtrl)
+    {
+        I.rtsCtrl = _rtsCtrl;
+    }
+
+    /// <summary>
+    /// Setta il riferimento al controller del nav mesh
+    /// </summary>
+    /// <param name="_navMeshController"></param>
+    public void SetNavMeshController(NavMeshController _navMeshController)
+    {
+        I.navMeshCtrl = _navMeshController;
+    }
+
+    /// <summary>
+    /// Setta il riferimento al controller dei Gift
+    /// </summary>
+    /// <param name="_giftController"></param>
+    public void SetGiftController(GiftController _giftController)
+    {
+        I.giftCtrl = _giftController;
+    }
+
+    /// <summary>
+    /// Setta il riferimento al
+    /// </summary>
+    /// <param name="_poolManager"></param>
+    public void SetPoolManager(PoolManager _poolManager)
+    {
+        I.poolManager = _poolManager;
     }
     #endregion
 
-
     public static LevelController I;
+    public LevelData currentLevel; //TODO: caricare dinamicamente
+
+    public bool IsGameplay { get; private set; }
+
+    Animator SM;
 
     private void Awake()
     {
         if (I == null)
-            I = this;
+            InternalSetup();
         else
             DestroyImmediate(this);
     }
-
-    // Start is called before the first frame update
-    void Start()
+    
+    /// <summary>
+    /// Inizializza il singleton, prende riferimento della state machine e la fa partire
+    /// </summary>
+    void InternalSetup()
     {
-        poolManager = GetComponent<PoolManager>();
-        inputCtrl = GetComponent<PlayerInputController>();
-        cameraCtrl = GetComponent<CameraController>();
-        rtsCtrl = GetComponent< RTSController>();
-        navMeshCtrl = GetComponent<NavMeshController>();
-        giftCtrl = GetComponent<GiftController>();
-        
-        poolManager.Setup();
-        inputCtrl.Setup(cameraCtrl, rtsCtrl);
-        rtsCtrl.Setup();
-        navMeshCtrl.Setup();
-        cameraCtrl.Setup(GetInputController.isRTSView);
-        giftCtrl.Setup();
+        I = this;
+        SM = GetComponent<Animator>();
+        StartSM();
     }
+
+    public void IsGameplayStatus()
+    {
+        IsGameplay = true;
+    }
+
+    #region SM triggers
+    /// <summary>
+    /// Triggera la partenza della State machine
+    /// </summary>
+    private void StartSM()
+    {
+        SM.SetTrigger("StartSM");
+    }
+    /// <summary>
+    /// Triggera il cambio di stato per andare nel Setup
+    /// </summary>
+    public void GoToNext()
+    {
+        SM.SetTrigger("GoToNext");
+    }
+
+    #endregion
 }
