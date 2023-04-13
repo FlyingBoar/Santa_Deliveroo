@@ -5,12 +5,14 @@ using System.Linq;
 
 public class RTSController : MonoBehaviour
 {
+    [SerializeField] Camera cameraOverlay;
     List<Santa> allUnits = new List<Santa>();
     List<Vector3> spawnPositions = new List<Vector3>();
     Camera cam;
 
     IInteractable selectedUnit = null;
 
+    private static readonly int _TACTICALVIEW_LAYER = 1 << 3;
     private static readonly int _INTERACTABLE_LAYER = 1 << 6;
     private static readonly int _NAVMESH_LAYER = 1 << 7;
 
@@ -69,7 +71,7 @@ public class RTSController : MonoBehaviour
             selectedUnit = null;
         }
 
-        if (Physics.Raycast(ray, out hit, 500.0f, _INTERACTABLE_LAYER))
+        if (Physics.Raycast(ray, out hit, 500.0f, _TACTICALVIEW_LAYER))
         {
             IInteractable interactable = hit.collider.GetComponentInChildren<IInteractable>() != null ? hit.collider.GetComponentInChildren<IInteractable>() : hit.collider.GetComponentInParent<IInteractable>();
             if (interactable != null)
@@ -90,7 +92,7 @@ public class RTSController : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 50);
 
         // Check se è stato colpito un oggetto interattivo
-        if (Physics.Raycast(ray, out hit, 500.0f, _INTERACTABLE_LAYER))
+        if (Physics.Raycast(ray, out hit, 500.0f, _TACTICALVIEW_LAYER))
         {
             IDestination destination = hit.collider.GetComponent<IDestination>() != null ? hit.collider.GetComponent<IDestination>() : hit.collider.GetComponentInParent<IDestination>();
 
@@ -143,4 +145,9 @@ public class RTSController : MonoBehaviour
         }
     }
 
+
+    void SetOverlayStatus(bool _status)
+    {
+        cameraOverlay.enabled = _status;
+    }
 }

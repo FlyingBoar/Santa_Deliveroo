@@ -18,13 +18,16 @@ public class SetupState : StateMachineBehaviour
         LC.SetRtsController(FindObjectOfType<RTSController>());
         LC.SetNavMeshController(FindObjectOfType<NavMeshController>());
         LC.SetGiftController(FindObjectOfType<GiftController>());
+        LC.SetHouseController(FindObjectOfType<HouseController>());
+        LC.SetMatrixBlender(FindObjectOfType<MatrixBlender>());
 
         LC.GetPoolManager().Setup();
         LC.GetInputController().Setup(LC.GetCameraController(), LC.GetRTSController());
-        LC.GetCameraController().Setup(LC.GetInputController().isRTSView);
+        LC.GetCameraController().Setup(LC.GetInputController().isRTSView, LC.GetMatrixBlender());
         LC.GetRTSController().Setup();
         LC.GetNavMeshCtrl().Setup();
-        
+        LC.GetHouseController().Setup(LC.GetGiftController());
+        LC.GetMatrixBlender().Setup();
         LC.GoToNext();
     }
 

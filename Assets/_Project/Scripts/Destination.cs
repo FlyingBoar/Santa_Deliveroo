@@ -7,10 +7,15 @@ using UnityEngine.XR;
 public class Destination : MonoBehaviour, IDestination
 {
     Transform destinationPoint;
+    public bool IsDestinationActive { get; private set; }
+    SpriteRenderer spriteRenderer;
+    BoxCollider spriteBoxCollider;
 
-    private void Start()
+    public void Setup()
     {
         destinationPoint = GetComponentsInChildren<Transform>().First(x => x.tag == "HouseDestination");
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        spriteBoxCollider = spriteRenderer.GetComponent<BoxCollider>();
     }
 
     public Vector3 GetDestinationPosition()
@@ -48,5 +53,12 @@ public class Destination : MonoBehaviour, IDestination
             giftDropped.Add(item);
         }
         return true;
+    }
+
+    public void SetDestinationisActive(bool _isActive)
+    {
+        IsDestinationActive = _isActive;
+        spriteRenderer.enabled = _isActive;
+        spriteBoxCollider.enabled = _isActive;
     }
 }

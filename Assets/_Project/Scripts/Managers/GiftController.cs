@@ -16,12 +16,17 @@ public class GiftController : MonoBehaviour
         int giftAmountInLvl = LevelController.I.LevelData.MinScoreToWin;
         slowAfterPickup = LevelController.I.LevelData.SantaSlowedAfterPickup;
         //per ogni casa
-        for (int i = 0; i < giftAmountInLvl;  i++)
+        /*for (int i = 0; i < giftAmountInLvl;  i++)
         {
             //per ogni regalo che deve avere la casa, genera un regalo (2 cicli innestati)
-            Gift g = Spawn(navMeshCtrl.GetRandomLocation());
-            g.Init(new GiftData { destination = null, SlowedAfterPickup = slowAfterPickup });
-        }
+            SpawnGiftOnRandomLocation();
+        }*/
+    }
+
+    public void SpawnGiftOnRandomLocation(Destination _destination)
+    {
+        Gift g = Spawn(navMeshCtrl.GetRandomLocation());
+        g.Init(new GiftData { destination = _destination, SlowedAfterPickup = slowAfterPickup });
     }
 
     internal void GifCollected(Gift gift)

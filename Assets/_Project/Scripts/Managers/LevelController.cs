@@ -11,6 +11,8 @@ public class LevelController : MonoBehaviour
     NavMeshController navMeshCtrl;
     GiftController giftCtrl;
     PoolManager poolManager;
+    HouseController houseCtrl;
+    MatrixBlender blender;
 
     #region Get & Set
 
@@ -70,8 +72,27 @@ public class LevelController : MonoBehaviour
         return I.poolManager;
     }
 
+
+    /// <summary>
+    /// Ritorna il riferimento al Pool manager
+    /// </summary>
+    /// <returns></returns>
+    public HouseController GetHouseController()
+    {
+        return I.houseCtrl;
+    }
+
+    /// <summary>
+    /// Ritorna il riferimento al blender per la proiezione della camera
+    /// </summary>
+    /// <returns></returns>
+    public MatrixBlender GetMatrixBlender()
+    {
+        return I.blender;
+    }
+
     //// ------------------------ SET ----------------------------- \\
-    
+
     /// <summary>
     /// Setta il riferimento al controller degli input
     /// </summary>
@@ -117,13 +138,32 @@ public class LevelController : MonoBehaviour
     }
 
     /// <summary>
-    /// Setta il riferimento al
+    /// Setta il riferimento al pool manager
     /// </summary>
     /// <param name="_poolManager"></param>
     public void SetPoolManager(PoolManager _poolManager)
     {
         I.poolManager = _poolManager;
     }
+
+    /// <summary>
+    /// Setta il riferimento all'house controller
+    /// </summary>
+    /// <param name="_houseController"></param>
+    public void SetHouseController(HouseController _houseController)
+    {
+        I.houseCtrl = _houseController;
+    }
+
+    /// <summary>
+    /// Setta il riferimento al blender della prospettiva per la camera
+    /// </summary>
+    /// <param name="_matrixBlender"></param>
+    public void SetMatrixBlender(MatrixBlender _matrixBlender)
+    {
+        I.blender = _matrixBlender;
+    }
+    
     #endregion
 
     public static LevelController I;
@@ -142,7 +182,7 @@ public class LevelController : MonoBehaviour
         else
             DestroyImmediate(this);
     }
-    
+
     /// <summary>
     /// Inizializza il singleton, prende riferimento della state machine e la fa partire
     /// </summary>

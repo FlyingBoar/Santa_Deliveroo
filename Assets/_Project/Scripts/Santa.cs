@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -51,6 +52,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         foreach (var item in _giftToRemove)
         {
             giftCollected.Remove(item);
+            UpdateSpeed();
         }
     }
 
@@ -77,7 +79,6 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     {
         if (agent != null)
         {
-            currentDestination = destination;
             movementInformation movement = new movementInformation { position = moveTo, interactable = destination };
 
             if (_isQueueAction)
@@ -105,13 +106,13 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         {
             return;
         }
-
+        
         giftCollected.Add(data);
+        UpdateSpeed();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //TODO: questo controllo deve essere effettuato sia per i regali che per le abitazioni
         IDestination d = other.GetComponentInParent<IDestination>();
         if(d != null && d == currentDestination)
         {
@@ -139,6 +140,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         {
             lineRenderer.material.color = Color.green;
         }
+        currentDestination = _movement.interactable;
         agent.SetDestination(_movement.position);
     }
 
@@ -158,6 +160,11 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             Vector3 point = new Vector3(agent.path.corners[i].x, agent.path.corners[i].y, agent.path.corners[i].z);
             lineRenderer.SetPosition(i, point);
         }
+    }
+
+    void UpdateSpeed()
+    {
+        agent.speed = LevelController.I.LevelData.SantaSpeed - giftCollected.Sum(x => x.SlowedAfterPickup);
     }
 
     struct movementInformation

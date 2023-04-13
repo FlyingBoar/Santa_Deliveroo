@@ -14,20 +14,26 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     float cameraAnimationSpeed = 1.5f;
 
+    [SerializeField]
+    Camera overlaycam;
     Transform camTransform;
-
+    Camera cam;
     bool isMouseRotationEnable;
     Vector2 mouseRotation;
 
     Transform tacticalView;
     Vector3 origianlLocation;
     Quaternion origianlRotation;
+    MatrixBlender blender;
 
-    public void Setup(bool _isRTSViewEnabled)
+    public void Setup(bool _isRTSViewEnabled, MatrixBlender _blender)
     {
         tacticalView = FindObjectsOfType<Transform>().First(x => x.tag == "TacticalView");
-        camTransform = Camera.main.GetComponent<Transform>();
+        cam = Camera.main;
+        camTransform = cam.GetComponent<Transform>();
         UpdateMouseActivationStatus();
+        blender = _blender;
+        overlaycam.enabled = false;
     }
 
     public void DetectInput()
@@ -81,15 +87,18 @@ public class CameraController : MonoBehaviour
         if (_isRtsView)
         {
             UpdateMouseActivationStatus();
+            blender.BlendToMatrix(MatrixBlender.OrthoMatrix, 1.5f);
             origianlLocation = camTransform.localPosition;
             origianlRotation = camTransform.rotation;
-            camTransform.DOMove(tacticalView.position, cameraAnimationSpeed);
+            camTransform.DOMove(tacticalView.position, cameraAnimationSpeed).OnComplete(() => { overlaycam.enabled = true; });
             camTransform.DORotateQuaternion(tacticalView.rotation, cameraAnimationSpeed);
         }
         else
         {
+            overlaycam.enabled = false;
             camTransform.DOMove(origianlLocation, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
             camTransform.DORotateQuaternion(origianlRotation, cameraAnimationSpeed);
+            blender.BlendToMatrix(MatrixBlender.PerspectiveMatrix, 1f);
         }
 
     }
