@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Santa : PoolObjectBase, IMooveAndInteract
 {
     [SerializeField]
-    Image selected;
+    SpriteRenderer selected;
     NavMeshAgent agent;
     LineRenderer lineRenderer;
 

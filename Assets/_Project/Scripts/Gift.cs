@@ -10,6 +10,8 @@ using static UnityEngine.UI.CanvasScaler;
 public class Gift : PoolObjectBase, IDestination
 {
     GiftData data { get; set; }
+    [SerializeField]
+    SpriteRenderer highlight;
 
     public void Init(GiftData _myData)
     {
@@ -19,11 +21,13 @@ public class Gift : PoolObjectBase, IDestination
     public void OnClickOver()
     {
         // highlight + mostra informazioni in UI
+        highlight.enabled = true;
     }
 
     public void OnDeselect()
     {
         // Rimuove highlight
+        highlight.enabled = false;
     }
 
     public Vector3 GetDestinationPosition()

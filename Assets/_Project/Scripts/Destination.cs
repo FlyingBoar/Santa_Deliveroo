@@ -8,14 +8,17 @@ public class Destination : MonoBehaviour, IDestination
 {
     Transform destinationPoint;
     public bool IsDestinationActive { get; private set; }
-    SpriteRenderer spriteRenderer;
+    [SerializeField]
+    SpriteRenderer MapIcon;
+    [SerializeField]
+    SpriteRenderer highlight;
     BoxCollider spriteBoxCollider;
-
+    
     public void Setup()
     {
         destinationPoint = GetComponentsInChildren<Transform>().First(x => x.tag == "HouseDestination");
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        spriteBoxCollider = spriteRenderer.GetComponent<BoxCollider>();
+        MapIcon = GetComponentInChildren<SpriteRenderer>();
+        spriteBoxCollider = MapIcon.GetComponent<BoxCollider>();
     }
 
     public Vector3 GetDestinationPosition()
@@ -25,12 +28,14 @@ public class Destination : MonoBehaviour, IDestination
 
     public void OnClickOver()
     {
-        // Highlight + Get informations
+        // highlight + mostra informazioni in UI
+        highlight.enabled = true;
     }
 
     public void OnDeselect()
     {
-        // rimuove Highlight + informations
+        // Rimuove highlight
+        highlight.enabled = false;
     }
 
     public void AgentOnDestination(Santa _agent)
@@ -58,7 +63,7 @@ public class Destination : MonoBehaviour, IDestination
     public void SetDestinationisActive(bool _isActive)
     {
         IsDestinationActive = _isActive;
-        spriteRenderer.enabled = _isActive;
+        MapIcon.enabled = _isActive;
         spriteBoxCollider.enabled = _isActive;
     }
 }
