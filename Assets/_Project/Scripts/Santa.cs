@@ -14,8 +14,26 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 
     List<movementInformation> queuedActions = new List<movementInformation>();
     List<GiftData> giftCollected = new List<GiftData>();
-
+    bool isUnitSelected;
     IDestination currentDestination = null;
+
+    private void LateUpdate()
+    {
+        if (agent && agent.hasPath)
+        {
+            DrawPath();
+        }
+        else
+        {
+            if (queuedActions.Count > 0)
+            {
+                SetAgentDestination(queuedActions[0]);
+                queuedActions.RemoveAt(0);
+            }
+        }
+    }
+
+    #region API
 
     public void Setup(float _unitSpeed)
     {
@@ -31,41 +49,40 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         agent.speed = _unitSpeed;
     }
 
-    private void LateUpdate()
-    {
-        if (agent && agent.hasPath)
-        { 
-            DrawPath(); 
-        }
-        else
-        {
-            if(queuedActions.Count > 0)
-            {
-                SetAgentDestination(queuedActions[0]);
-                queuedActions.RemoveAt(0);
-            }
-        }
-    }
-
+    /// <summary>
+    /// Rimuove i regali passati come paratro dalla lista di regali posseduti dall'unità
+    /// </summary>
+    /// <param name="_giftToRemove"></param>
     public void RemoveGifts(List<GiftData> _giftToRemove)
     {
         foreach (var item in _giftToRemove)
         {
             giftCollected.Remove(item);
-            UpdateSpeed();
         }
+        UpdateSpeed();
     }
 
-    public void OnClickOver()
+    /// <summary>
+    /// Azioni al click sull'unità
+    /// </summary>
+    public void OnSelect()
     {
         SelectedUnit(true);
     }
 
+    /// <summary>
+    /// Azioni durante il deselect
+    /// </summary>
     public void OnDeselect()
     {
         SelectedUnit(false);
     }
 
+    /// <summary>
+    /// Muove l'unità verso una destinazione interattiva
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <param name="_isQueuedAction"></param>
     public void OnAction(IDestination destination, bool _isQueuedAction = false)
     {
         if (agent != null)
@@ -75,6 +92,12 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         }
     }
 
+    /// <summary>
+    /// Muove l'unità verso una destinazione, salva nella lista di azioni in coda se _isQueueAction è vera
+    /// </summary>
+    /// <param name="moveTo"></param>
+    /// <param name="_isQueueAction"></param>
+    /// <param name="destination"></param>
     public void OnAction(Vector3 moveTo, bool _isQueueAction = false, IDestination destination = null)
     {
         if (agent != null)
@@ -87,7 +110,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             }
             else
             {
-                if(queuedActions.Count > 0)
+                if (queuedActions.Count > 0)
                 {
                     queuedActions.Clear();
                 }
@@ -97,42 +120,60 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     }
 
     /// <summary>
-    /// Add the given gift to collected gift if not already collected
+    /// Aggiunge il regalo passato come parametro alla lista di regali se non presente
     /// </summary>
-    /// <param name="data"></param>
-    public void CollectGift(GiftData data)
+    /// <param name="gift"></param>
+    public void CollectGift(Gift gift)
     {
-        if(giftCollected.Contains(data))
+        if (giftCollected.Contains(gift.GetGiftData()))
         {
             return;
         }
-        
-        giftCollected.Add(data);
+
+        giftCollected.Add(gift.GetGiftData());
         UpdateSpeed();
     }
 
+    /// <summary>
+    /// Restituisce la lista dei regali raccolti
+    /// </summary>
+    /// <returns></returns>
+    public List<GiftData> GetCollectedGifts()
+    {
+        return giftCollected;
+    }
+    #endregion
+
+    /// <summary>
+    /// Se la destinazione con cui entra in contatto è la destinazione corrente, la destinazione viene avvisata
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         IDestination d = other.GetComponentInParent<IDestination>();
-        if(d != null && d == currentDestination)
+        if (d != null && d == currentDestination)
         {
             d.AgentOnDestination(this);
         }
     }
 
-    public List<GiftData> GetCollectedGifts()
-    {
-        return giftCollected;
-    }
-
+    /// <summary>
+    /// Setta lo stato della grafica che indica se l'unità è selezionata
+    /// </summary>
+    /// <param name="_isSelected"></param>
     void SelectedUnit(bool _isSelected)
     {
+        isUnitSelected = _isSelected;
         selected.enabled = _isSelected;
     }
 
+    /// <summary>
+    /// Setta la destinazione dell'unità modificando il colore del linerenderer
+    /// </summary>
+    /// <param name="_movement"></param>
     void SetAgentDestination(movementInformation _movement)
     {
-        if(_movement.interactable != null)
+        if (_movement.interactable != null)
         {
             lineRenderer.material.color = Color.cyan;
         }
@@ -144,6 +185,9 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         agent.SetDestination(_movement.position);
     }
 
+    /// <summary>
+    /// Diresegna il path del movimento corrente
+    /// </summary>
     void DrawPath()
     {
         int corners = agent.path.corners.Length;
@@ -162,11 +206,17 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         }
     }
 
+    /// <summary>
+    /// Aggiorna la velocità del navmesh
+    /// </summary>
     void UpdateSpeed()
     {
         agent.speed = LevelController.I.LevelData.SantaSpeed - giftCollected.Sum(x => x.SlowedAfterPickup);
     }
 
+    /// <summary>
+    /// Struttura contenente le informazioni del movimento
+    /// </summary>
     struct movementInformation
     {
         public Vector3 position;

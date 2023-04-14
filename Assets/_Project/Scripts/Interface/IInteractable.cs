@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public void OnClickOver();
+    public void OnSelect();
     public void OnDeselect();
 }

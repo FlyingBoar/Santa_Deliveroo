@@ -22,6 +22,11 @@ public class HouseController : MonoBehaviour
         DisalbeAllDestinations();
     }
 
+    /// <summary>
+    /// Operazioni dell'inizio livello.
+    /// Set del numero di regali per le destinazioni e delle stesse attive nel livello
+    /// </summary>
+    /// <param name="_currentLevel"></param>
     public void Init(LevelData _currentLevel)
     {
         // Determina il numero di regali per ogni casa in base ai minimi punti necessari per il livello
@@ -39,11 +44,15 @@ public class HouseController : MonoBehaviour
         {
             for (int k = 0; k < giftPerHouse; k++)
             {
-                giftController.SpawnGiftOnRandomLocation(activeHouses[j]);
+                var gift = giftController.SpawnGiftOnRandomLocation(activeHouses[j]);
+                activeHouses[j].AddGiftToDeliverable(gift);
             }
         }
     }
 
+    /// <summary>
+    /// Disabilita tutte le icone delle destinazioni
+    /// </summary>
     void DisalbeAllDestinations()
     {
         foreach (var destination in allDestinations)

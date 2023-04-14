@@ -39,6 +39,9 @@ public class PlayerInputController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Richiama lo switch della camera
+    /// </summary>
     void SwitchView()
     {
         isRTSView = !isRTSView;

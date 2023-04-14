@@ -9,16 +9,17 @@ using static UnityEngine.UI.CanvasScaler;
 
 public class Gift : PoolObjectBase, IDestination
 {
-    GiftData data { get; set; }
+    GiftData data;
     [SerializeField]
     SpriteRenderer highlight;
+    
 
     public void Init(GiftData _myData)
     {
-        data = _myData;
+        SetGiftData(_myData);
     }
 
-    public void OnClickOver()
+    public void OnSelect()
     {
         // highlight + mostra informazioni in UI
         highlight.enabled = true;
@@ -37,13 +38,25 @@ public class Gift : PoolObjectBase, IDestination
 
     public void AgentOnDestination(Santa _agent)
     {
-        _agent.CollectGift(data);
+        _agent.CollectGift(this);
         LevelController.I.GetGiftController().GifCollected(this);
+    }
+
+    public GiftData GetGiftData()
+    {
+        return data;
+    }
+
+    public void SetGiftData(GiftData _data)
+    {
+        _data.Gift = this;
+        data = _data;
     }
 }
 
 public class GiftData
 {
-    public Destination destination;
+    public Destination Destination;
+    public Gift Gift;
     public float SlowedAfterPickup;
 }

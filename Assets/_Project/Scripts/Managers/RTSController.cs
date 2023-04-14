@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class RTSController : MonoBehaviour
 {
-    [SerializeField] Camera cameraOverlay;
     List<Santa> allUnits = new List<Santa>();
     List<Vector3> spawnPositions = new List<Vector3>();
     Camera cam;
@@ -13,8 +13,9 @@ public class RTSController : MonoBehaviour
     IInteractable selectedUnit = null;
 
     private static readonly int _TACTICALVIEW_LAYER = 1 << 3;
-    private static readonly int _INTERACTABLE_LAYER = 1 << 6;
     private static readonly int _NAVMESH_LAYER = 1 << 7;
+
+    #region API
 
     /// <summary>
     /// called to setup the main function of the class
@@ -34,6 +35,8 @@ public class RTSController : MonoBehaviour
         spawnPositions = GameObject.FindGameObjectsWithTag("UnitSpawn").Select(x => x.GetComponent<Transform>().position).ToList();
         SpawnUnits(_levData);
     }
+
+    #endregion
 
     #region Input
     /// <summary>
@@ -77,7 +80,7 @@ public class RTSController : MonoBehaviour
             if (interactable != null)
             {
                 selectedUnit = interactable;
-                selectedUnit.OnClickOver();
+                selectedUnit.OnSelect();
             }
         }
     }
@@ -119,15 +122,6 @@ public class RTSController : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Get reference to the first agent in the list of all available
-    /// </summary>
-    /// <returns></returns>
-    public Santa GetFirstAvailableAgent() 
-    {
-        return allUnits.First();
-    }
-
-    /// <summary>
     /// Spawn the unitys on the map
     /// </summary>
     /// <param name="_levData"></param>
@@ -135,7 +129,7 @@ public class RTSController : MonoBehaviour
     {
         for (int i = 0; i < _levData.UnitsInLevel; i++)
         {
-            Vector3 pos = spawnPositions[Random.Range(0, spawnPositions.Count)];
+            Vector3 pos = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
             if(pos != null)
             {
                 Santa unit = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Santa>(transform, pos);
@@ -143,11 +137,5 @@ public class RTSController : MonoBehaviour
                 allUnits.Add(unit);
             }
         }
-    }
-
-
-    void SetOverlayStatus(bool _status)
-    {
-        cameraOverlay.enabled = _status;
     }
 }

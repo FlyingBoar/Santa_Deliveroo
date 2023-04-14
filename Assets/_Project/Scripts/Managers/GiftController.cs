@@ -15,27 +15,38 @@ public class GiftController : MonoBehaviour
 
         int giftAmountInLvl = LevelController.I.LevelData.MinScoreToWin;
         slowAfterPickup = LevelController.I.LevelData.SantaSlowedAfterPickup;
-        //per ogni casa
-        /*for (int i = 0; i < giftAmountInLvl;  i++)
-        {
-            //per ogni regalo che deve avere la casa, genera un regalo (2 cicli innestati)
-            SpawnGiftOnRandomLocation();
-        }*/
     }
 
-    public void SpawnGiftOnRandomLocation(Destination _destination)
+    /// <summary>
+    /// Spawna un regalo e lo associa  alla destinazione che viene passata
+    /// </summary>
+    /// <param name="_destination"></param>
+    public GiftData SpawnGiftOnRandomLocation(Destination _destination)
     {
-        Gift g = Spawn(navMeshCtrl.GetRandomLocation());
-        g.Init(new GiftData { destination = _destination, SlowedAfterPickup = slowAfterPickup });
+        return SpawnGiftOnLocation(navMeshCtrl.GetRandomLocation(), _destination);
     }
 
-    internal void GifCollected(Gift gift)
+    /// <summary>
+    /// Spawna il regalo nella posizione indicata
+    /// </summary>
+    /// <param name="_spawnPosition"></param>
+    /// <param name="_destination"></param>
+    public GiftData SpawnGiftOnLocation(Vector3 _spawnPosition, Destination _destination)
+    {
+        // TODO: funzione da chiamare alla morte dell'unità Santa
+        Gift g = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(_spawnPosition);
+        GiftData data = new GiftData { Destination = _destination, SlowedAfterPickup = slowAfterPickup };
+        g.Init(data);
+        return g.GetGiftData();
+    }
+
+    /// <summary>
+    /// Restituisce l'oggetto regalo al pooler
+    /// </summary>
+    /// <param name="gift"></param>
+    public void GifCollected(Gift gift)
     {
         LevelController.I.GetPoolManager().RetrievePoollable(gift);
     }
 
-    Gift Spawn(Vector3 spawnPos)
-    {
-        return LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(spawnPos);
-    }
 }

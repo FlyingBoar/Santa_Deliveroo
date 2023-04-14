@@ -79,7 +79,7 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Camera animation for the game mode
+    /// Cambio visuale della videocamera
     /// </summary>
     /// <param name="_isRtsView"></param>
     public void SwitchView(bool _isRtsView)
@@ -104,7 +104,7 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Update the status of the mouse related to the current game mode (RTS or Fly)
+    /// Aggiorna lo stato del mouse in base al tipo dicontrollo attuale
     /// </summary>
     void UpdateMouseActivationStatus()
     {

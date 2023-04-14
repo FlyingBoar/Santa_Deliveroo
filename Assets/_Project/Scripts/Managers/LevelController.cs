@@ -193,15 +193,22 @@ public class LevelController : MonoBehaviour
         StartSM();
     }
 
+    /// <summary>
+    /// Informazione se il gioco si trova nello stato di gameplay
+    /// </summary>
     public void IsGameplayStatus()
     {
         IsGameplay = true;
     }
 
+    /// <summary>
+    /// Aggiunge i punti vittoria ottenuti
+    /// </summary>
+    /// <param name="_pointsToAdd"></param>
     public void AddVictoryPoints(int _pointsToAdd)
     {
         _victoryPoints += _pointsToAdd;
-        // check per le condizioni di vittoria
+        // check per le condizioni di vittoria (se tutti i regali sono stati raccolti)
     }
 
     #region SM triggers
