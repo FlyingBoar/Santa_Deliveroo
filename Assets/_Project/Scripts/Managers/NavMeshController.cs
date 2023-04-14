@@ -17,6 +17,10 @@ public class NavMeshController : MonoBehaviour
         navMeshPanelPos = navMeshPanel.GetComponent<Transform>().position;
     }
 
+    /// <summary>
+    /// Restituisce una posizione casuale raggiungibile dagli agenti
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetRandomLocation()
     {
         Vector3 randomSpot;
@@ -28,6 +32,11 @@ public class NavMeshController : MonoBehaviour
         return randomSpot;
     }
 
+    /// <summary>
+    /// Controlla se la posizione data si trova all'interno del navmesh
+    /// </summary>
+    /// <param name="_pos"></param>
+    /// <returns></returns>
     bool isPointOnNavmesh(Vector3 _pos)
     {
         NavMeshPath navMeshPath = new NavMeshPath();

@@ -17,7 +17,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     bool isUnitSelected;
     IDestination currentDestination = null;
 
-    private void LateUpdate()
+    private void Update()
     {
         if (agent && agent.hasPath)
         {

@@ -15,7 +15,7 @@ MonoBehaviour:
   ActiveHouses: 10
   MinScoreToWin: 6
   LevelTimerSec: 120
-  EnemySpeed: 6
+  EnemySpeed: 4
   ActiveEnemies: 1
   UnitsInLevel: 3
   SantaSpeed: 10

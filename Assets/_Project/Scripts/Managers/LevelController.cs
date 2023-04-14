@@ -13,6 +13,7 @@ public class LevelController : MonoBehaviour
     PoolManager poolManager;
     HouseController houseCtrl;
     MatrixBlender blender;
+    EnemiesController enemiesCtrl;
 
     #region Get & Set
 
@@ -91,6 +92,14 @@ public class LevelController : MonoBehaviour
         return I.blender;
     }
 
+    /// <summary>
+    /// Ritorna il riferimento al controllore delle befane
+    /// </summary>
+    /// <returns></returns>
+    public EnemiesController GetEnemiesController()
+    {
+        return I.enemiesCtrl;
+    }
     //// ------------------------ SET ----------------------------- \\
 
     /// <summary>
@@ -162,6 +171,15 @@ public class LevelController : MonoBehaviour
     public void SetMatrixBlender(MatrixBlender _matrixBlender)
     {
         I.blender = _matrixBlender;
+    }
+
+    /// <summary>
+    /// Setta il riferimento al controllore delle befane
+    /// </summary>
+    /// <param name="_enemiesController"></param>
+    public void SetEnemiesController(EnemiesController _enemiesController)
+    {
+        I.enemiesCtrl = _enemiesController;
     }
     
     #endregion

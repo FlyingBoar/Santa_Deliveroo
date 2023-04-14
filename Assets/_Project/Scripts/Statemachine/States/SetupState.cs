@@ -20,6 +20,7 @@ public class SetupState : StateMachineBehaviour
         LC.SetGiftController(FindObjectOfType<GiftController>());
         LC.SetHouseController(FindObjectOfType<HouseController>());
         LC.SetMatrixBlender(FindObjectOfType<MatrixBlender>());
+        LC.SetEnemiesController(FindObjectOfType<EnemiesController>());
 
         LC.GetPoolManager().Setup();
         LC.GetInputController().Setup(LC.GetCameraController(), LC.GetRTSController());

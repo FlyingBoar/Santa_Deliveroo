@@ -15,6 +15,7 @@ public class GameplayState : StateMachineBehaviour
         LC.GetGiftController().Init();
         LC.GetRTSController().Init(LC.LevelData);
         LC.GetHouseController().Init(LC.LevelData);
+        LC.GetEnemiesController().Init(LC.LevelData);
         LC.IsGameplayStatus();
     }
 }
