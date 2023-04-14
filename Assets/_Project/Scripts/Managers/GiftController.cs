@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,11 +10,11 @@ public class GiftController : MonoBehaviour
     NavMeshController navMeshCtrl;
     float slowAfterPickup;
 
+    List<Gift> spawnedGifts = new List<Gift>();
+
     public void Init()
     {
         navMeshCtrl = LevelController.I.GetNavMeshCtrl();
-
-        int giftAmountInLvl = LevelController.I.LevelData.MinScoreToWin;
         slowAfterPickup = LevelController.I.LevelData.SantaSlowedAfterPickup;
     }
 
@@ -37,6 +38,7 @@ public class GiftController : MonoBehaviour
         Gift g = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(_spawnPosition);
         GiftData data = new GiftData { Destination = _destination, SlowedAfterPickup = slowAfterPickup };
         g.Init(data);
+        spawnedGifts.Add(g);
         return g.GetGiftData();
     }
 
@@ -47,6 +49,17 @@ public class GiftController : MonoBehaviour
     public void GifCollected(Gift gift)
     {
         LevelController.I.GetPoolManager().RetrievePoollable(gift);
+        spawnedGifts.Remove(gift);
     }
 
+    public void SetHighlight(Destination _destination)
+    {
+        foreach (var gift in spawnedGifts)
+        {
+            if(gift.GetGiftData().Destination == _destination)
+                gift.OnSelect(false);
+            else
+                gift.OnDeselect();
+        }   
+    }
 }

@@ -17,12 +17,22 @@ public class Gift : PoolObjectBase, IDestination
     public void Init(GiftData _myData)
     {
         SetGiftData(_myData);
+        LevelController.I.GetRTSController().OnMassiveDeselect += OnDeselect;
     }
 
-    public void OnSelect()
+    public override void OnRetrieve()
+    {
+        LevelController.I.GetRTSController().OnMassiveDeselect -= OnDeselect;
+    }
+
+    public void OnSelect(bool _directSelectin = true)
     {
         // highlight + mostra informazioni in UI
         highlight.enabled = true;
+        if(_directSelectin)
+        {
+            LevelController.I.GetHouseController().SetHighlight(GetGiftData());
+        }
     }
 
     public void OnDeselect()

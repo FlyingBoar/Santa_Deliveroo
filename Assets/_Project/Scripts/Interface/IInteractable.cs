@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public void OnSelect();
+    public void OnSelect(bool _directSelectin = true);
     public void OnDeselect();
 }

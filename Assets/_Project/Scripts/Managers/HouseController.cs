@@ -50,6 +50,28 @@ public class HouseController : MonoBehaviour
         }
     }
 
+    public void SetHighlight(List<GiftData> gifts)
+    {
+        foreach (var destination in allDestinations.Where(x => x.isActiveAndEnabled == true)) 
+        {
+            if (destination.ChkDestinationContainGift(gifts))
+                destination.OnSelect(false);
+            else
+                destination.OnDeselect();
+        }
+    }
+
+    public void SetHighlight(GiftData gifts)
+    {
+        foreach (var destination in allDestinations.Where(x => x.isActiveAndEnabled == true))
+        {
+            if (destination.ChkDestinationContainGift(gifts))
+                destination.OnSelect(false);
+            else
+                destination.OnDeselect();
+        }
+    }
+
     /// <summary>
     /// Disabilita tutte le icone delle destinazioni
     /// </summary>

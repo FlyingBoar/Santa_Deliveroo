@@ -35,7 +35,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 
     #region API
 
-    public void Setup(float _unitSpeed)
+    public void Init(float _unitSpeed)
     {
         selected.enabled = false;
         if (!agent)
@@ -47,6 +47,13 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             lineRenderer = GetComponent<LineRenderer>();
         }
         agent.speed = _unitSpeed;
+
+        LevelController.I.GetRTSController().OnMassiveDeselect += OnDeselect;
+    }
+
+    public override void OnRetrieve()
+    {
+        LevelController.I.GetRTSController().OnMassiveDeselect -= OnDeselect;
     }
 
     /// <summary>
@@ -60,14 +67,22 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             giftCollected.Remove(item);
         }
         UpdateSpeed();
+        UpdateLinkedDestinations();
     }
 
     /// <summary>
     /// Azioni al click sull'unità
     /// </summary>
-    public void OnSelect()
+    public void OnSelect(bool _directSelectin = true)
     {
         SelectedUnit(true);
+        if (_directSelectin)
+        {
+            if(giftCollected.Count > 0)
+            {
+                UpdateLinkedDestinations();
+            }
+        }
     }
 
     /// <summary>
@@ -132,6 +147,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 
         giftCollected.Add(gift.GetGiftData());
         UpdateSpeed();
+        UpdateLinkedDestinations();
     }
 
     /// <summary>
@@ -212,6 +228,12 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     void UpdateSpeed()
     {
         agent.speed = LevelController.I.LevelData.SantaSpeed - giftCollected.Sum(x => x.SlowedAfterPickup);
+    }
+
+    void UpdateLinkedDestinations()
+    {
+        if(isUnitSelected)
+            LevelController.I.GetHouseController().SetHighlight(giftCollected);
     }
 
     /// <summary>

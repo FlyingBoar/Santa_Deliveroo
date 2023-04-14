@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
+using static UnityEditor.Progress;
 
 public class Destination : MonoBehaviour, IDestination
 {
@@ -32,10 +33,16 @@ public class Destination : MonoBehaviour, IDestination
         return destinationPoint.position;
     }
 
-    public void OnSelect()
+    public void OnSelect(bool _directSelectin = true)
     {
         // highlight + mostra informazioni in UI
         highlight.enabled = true;
+        if (_directSelectin)
+        {
+            // Chiama la funziona per evidenziare i regali
+            LevelController.I.GetGiftController().SetHighlight(this);
+        }
+
     }
 
     public void OnDeselect()
@@ -63,6 +70,15 @@ public class Destination : MonoBehaviour, IDestination
         IsDestinationActive = _isActive;
         MapIcon.enabled = _isActive;
         spriteBoxCollider.enabled = _isActive;
+
+        if( _isActive )
+        {
+            LevelController.I.GetRTSController().OnMassiveDeselect += OnDeselect;
+        }
+        else
+        {
+            LevelController.I.GetRTSController().OnMassiveDeselect -= OnDeselect;
+        }
     }
 
     /// <summary>
@@ -72,6 +88,26 @@ public class Destination : MonoBehaviour, IDestination
     public void AddGiftToDeliverable(GiftData _gift)
     {
         giftsToBeDelivered.Add(_gift);
+    }
+
+    /// <summary>
+    /// Controlla se della lista passata almeno un regalo è contenuto nella lista dei regali da consegnare
+    /// </summary>
+    /// <param name="_gifts"></param>
+    /// <returns></returns>
+    public bool ChkDestinationContainGift(List<GiftData> _gifts)
+    {
+        return giftsToBeDelivered.Any(x => _gifts.Any(y => x == y));
+    }
+
+    /// <summary>
+    /// Controlla se il regalo passato è contenuto nella lista dei regali da consegnare 
+    /// </summary>
+    /// <param name="_gift"></param>
+    /// <returns></returns>
+    public bool ChkDestinationContainGift(GiftData _gift)
+    {
+        return giftsToBeDelivered.Any(x => x == _gift);
     }
 
     #endregion

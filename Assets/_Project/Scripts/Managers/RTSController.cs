@@ -10,6 +10,8 @@ public class RTSController : MonoBehaviour
     List<Vector3> spawnPositions = new List<Vector3>();
     Camera cam;
 
+    public Action OnMassiveDeselect;
+
     IInteractable selectedUnit = null;
 
     private static readonly int _TACTICALVIEW_LAYER = 1 << 3;
@@ -67,6 +69,8 @@ public class RTSController : MonoBehaviour
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction * 50);
+
+        OnMassiveDeselect?.Invoke();
 
         if (selectedUnit != null)
         {
@@ -133,7 +137,7 @@ public class RTSController : MonoBehaviour
             if(pos != null)
             {
                 Santa unit = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Santa>(transform, pos);
-                unit.Setup(_levData.SantaSpeed);
+                unit.Init(_levData.SantaSpeed);
                 allUnits.Add(unit);
             }
         }
