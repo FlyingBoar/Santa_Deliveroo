@@ -29,12 +29,12 @@ public class PlayerInputController : MonoBehaviour
         }
 
         // TODO: debug da rimuovere
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetKeyUp(KeyCode.O))
         {
             LevelController.I.GameWon();
         }
         // TODO: debug da rimuovere
-        if (Input.GetKeyUp(KeyCode.Q))
+        if (Input.GetKeyUp(KeyCode.P))
         {
             LevelController.I.GameLost();
         }
