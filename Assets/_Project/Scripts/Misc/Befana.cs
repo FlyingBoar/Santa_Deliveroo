@@ -13,6 +13,12 @@ public class Befana : PoolObjectBase
     public override void OnSetup()
     {
         unitEnabled = false;
+        
+        var orienter = GetComponentInChildren<ObjectOrienter>();
+        if(orienter) 
+        {
+            orienter.Init(Camera.main.transform);
+        }
     }
     public override void OnRetrieve()
     {

@@ -46,8 +46,13 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         {
             lineRenderer = GetComponent<LineRenderer>();
         }
-        agent.speed = _unitSpeed;
+        var orienter = GetComponentInChildren<ObjectOrienter>();
+        if (orienter)
+        {
+            orienter.Init(Camera.main.transform);
+        }
 
+        agent.speed = _unitSpeed;
         LevelController.I.GetRTSController().OnMassiveDeselect += OnDeselect;
     }
 
