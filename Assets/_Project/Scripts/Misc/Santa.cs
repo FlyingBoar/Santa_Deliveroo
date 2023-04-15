@@ -239,7 +239,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// </summary>
     void UpdateSpeed()
     {
-        agent.speed = LevelController.I.LevelData.SantaSpeed - collectedGifts.Sum(x => x.SlowedAfterPickup);
+        agent.speed = LevelController.I.GetLevelData().SantaSpeed - collectedGifts.Sum(x => x.SlowedAfterPickup);
     }
 
     void UpdateLinkedDestinations()

@@ -21,6 +21,7 @@ public class SetupState : StateMachineBehaviour
         LC.SetHouseController(FindObjectOfType<HouseController>());
         LC.SetMatrixBlender(FindObjectOfType<MatrixBlender>());
         LC.SetEnemiesController(FindObjectOfType<EnemiesController>());
+        LC.SetUIManager(FindObjectOfType<UIManager>());
 
         LC.GetPoolManager().Setup();
         LC.GetInputController().Setup(LC.GetCameraController(), LC.GetRTSController());
@@ -29,6 +30,8 @@ public class SetupState : StateMachineBehaviour
         LC.GetNavMeshCtrl().Setup();
         LC.GetHouseController().Setup(LC.GetGiftController());
         LC.GetMatrixBlender().Setup();
+        LC.GetUIManager().Setup();
+
         LC.GoToNext();
     }
 

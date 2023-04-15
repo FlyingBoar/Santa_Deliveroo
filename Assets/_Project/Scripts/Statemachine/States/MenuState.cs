@@ -11,7 +11,6 @@ public class MenuState : StateMachineBehaviour
         if (LC == null)
             LC = LevelController.I;
 
-        //GM.GetUIManager().ChangeMenu(UIManager.MenuType.MainMenu);
-        LC.GoToNext(); // TODO: da rimuovere, il cambio deve stare sul menù
+        LC.GetUIManager().ChangeMenu(UIManager.MenuType.MainMenu);
     }
 }

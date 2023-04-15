@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6381669055864179842}
   - component: {fileID: 8362730074161901059}
   - component: {fileID: 8577333493023709725}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}

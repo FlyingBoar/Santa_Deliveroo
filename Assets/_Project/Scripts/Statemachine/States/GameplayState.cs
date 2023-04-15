@@ -11,11 +11,13 @@ public class GameplayState : StateMachineBehaviour
         if (LC == null)
             LC = LevelController.I;
 
-        //LC.GetUIManager().ChangeMenu(UIManager.MenuType.Gameplay);
+
+        LC.IsEnteringGameplayStatus();
+
+        LC.GetUIManager().ChangeMenu(UIManager.MenuType.Gameplay);
         LC.GetGiftController().Init();
-        LC.GetRTSController().Init(LC.LevelData);
-        LC.GetHouseController().Init(LC.LevelData);
-        LC.GetEnemiesController().Init(LC.LevelData);
-        LC.IsGameplayStatus();
+        LC.GetRTSController().Init(LC.GetLevelData());
+        LC.GetHouseController().Init(LC.GetLevelData());
+        LC.GetEnemiesController().Init(LC.GetLevelData());
     }
 }

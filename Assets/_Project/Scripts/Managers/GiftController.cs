@@ -15,7 +15,7 @@ public class GiftController : MonoBehaviour
     public void Init()
     {
         navMeshCtrl = LevelController.I.GetNavMeshCtrl();
-        slowAfterPickup = LevelController.I.LevelData.SantaSlowedAfterPickup;
+        slowAfterPickup = LevelController.I.GetLevelData().SantaSlowedAfterPickup;
     }
 
     /// <summary>

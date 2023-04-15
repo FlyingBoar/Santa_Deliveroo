@@ -14,6 +14,8 @@ public class LevelController : MonoBehaviour
     HouseController houseCtrl;
     MatrixBlender blender;
     EnemiesController enemiesCtrl;
+    UIManager UIManager;
+    LevelData lvelData;
 
     #region Get & Set
 
@@ -100,6 +102,21 @@ public class LevelController : MonoBehaviour
     {
         return I.enemiesCtrl;
     }
+
+    /// <summary>
+    /// Ritorna il riferimento allo UIManager
+    /// </summary>
+    /// <returns></returns>
+    public UIManager GetUIManager()
+    {
+        return I.UIManager;
+    }
+
+    public LevelData GetLevelData()
+    {
+        return I.lvelData;
+    }
+
     //// ------------------------ SET ----------------------------- \\
 
     /// <summary>
@@ -181,11 +198,19 @@ public class LevelController : MonoBehaviour
     {
         I.enemiesCtrl = _enemiesController;
     }
+
+    /// <summary>
+    /// Setta il riferimento allo UIManager
+    /// </summary>
+    /// <param name="_uiManager"></param>
+    public void SetUIManager(UIManager _uiManager)
+    {
+        I.UIManager = _uiManager;
+    }
     
     #endregion
 
     public static LevelController I;
-    public LevelData LevelData; //TODO: caricare dinamicamente
 
     private int _victoryPoints;
 
@@ -214,8 +239,9 @@ public class LevelController : MonoBehaviour
     /// <summary>
     /// Informazione se il gioco si trova nello stato di gameplay
     /// </summary>
-    public void IsGameplayStatus()
+    public void IsEnteringGameplayStatus()
     {
+        lvelData = GetUIManager().GetMainMenu().GetCurrentLevelSelected();
         IsGameplay = true;
     }
 
