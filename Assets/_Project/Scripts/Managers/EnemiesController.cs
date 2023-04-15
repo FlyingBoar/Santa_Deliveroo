@@ -19,6 +19,12 @@ public class EnemiesController : MonoBehaviour
         SpawnUnits(_levData);
     }
 
+    public void EnemyHitUnit(Befana _befana, Santa _santa)
+    {
+        LevelController.I.GetPoolManager().RetrievePoollable(_befana);
+        LevelController.I.GetRTSController().UnitHitByEnemy(_santa);
+    }
+
     /// <summary>
     /// Spawn the unitys on the map
     /// </summary>

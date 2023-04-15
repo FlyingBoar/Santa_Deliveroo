@@ -8,8 +8,13 @@ public class Befana : PoolObjectBase
     NavMeshAgent agent;
     Santa currentTarget;
     bool unitEnabled = false;
+    UnitHitDetector detector;
 
     public override void OnSetup()
+    {
+        unitEnabled = false;
+    }
+    public override void OnRetrieve()
     {
         unitEnabled = false;
     }
@@ -20,13 +25,19 @@ public class Befana : PoolObjectBase
         {
             agent = GetComponent<NavMeshAgent>();
         }
+        if(!detector)
+        {
+            detector = GetComponentInChildren<UnitHitDetector>();
+            detector.Init(this);
+        }
+
         agent.speed = _speed;
         unitEnabled = true;
     }
 
-    public override void OnRetrieve()
+    public void UnitHit(Santa _santa)
     {
-        unitEnabled = false;
+        LevelController.I.GetEnemiesController().EnemyHitUnit(this, _santa);
     }
 
     private void LateUpdate()
@@ -52,7 +63,7 @@ public class Befana : PoolObjectBase
 
     private void OnTriggerEnter(Collider other)
     {
-         var santa = other.GetComponentInParent<Santa>();
+        var santa = other.GetComponentInParent<Santa>();
         if (santa != null && currentTarget == null)
         {
             currentTarget = santa;

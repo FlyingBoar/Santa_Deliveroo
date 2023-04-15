@@ -13,7 +13,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     LineRenderer lineRenderer;
 
     List<movementInformation> queuedActions = new List<movementInformation>();
-    List<GiftData> giftCollected = new List<GiftData>();
+    List<GiftData> collectedGifts = new List<GiftData>();
     bool isUnitSelected;
     IDestination currentDestination = null;
 
@@ -64,7 +64,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     {
         foreach (var item in _giftToRemove)
         {
-            giftCollected.Remove(item);
+            collectedGifts.Remove(item);
         }
         UpdateSpeed();
         UpdateLinkedDestinations();
@@ -78,7 +78,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         SelectedUnit(true);
         if (_directSelectin)
         {
-            if(giftCollected.Count > 0)
+            if(collectedGifts.Count > 0)
             {
                 UpdateLinkedDestinations();
             }
@@ -140,12 +140,12 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// <param name="gift"></param>
     public void CollectGift(Gift gift)
     {
-        if (giftCollected.Contains(gift.GetGiftData()))
+        if (collectedGifts.Contains(gift.GetGiftData()))
         {
             return;
         }
 
-        giftCollected.Add(gift.GetGiftData());
+        collectedGifts.Add(gift.GetGiftData());
         UpdateSpeed();
         UpdateLinkedDestinations();
     }
@@ -156,8 +156,15 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// <returns></returns>
     public List<GiftData> GetCollectedGifts()
     {
-        return giftCollected;
+        return collectedGifts;
     }
+
+    public void UnitHitByEnemy()
+    {
+        OnDeselect();
+        collectedGifts.Clear();
+    }
+
     #endregion
 
     /// <summary>
@@ -227,13 +234,13 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// </summary>
     void UpdateSpeed()
     {
-        agent.speed = LevelController.I.LevelData.SantaSpeed - giftCollected.Sum(x => x.SlowedAfterPickup);
+        agent.speed = LevelController.I.LevelData.SantaSpeed - collectedGifts.Sum(x => x.SlowedAfterPickup);
     }
 
     void UpdateLinkedDestinations()
     {
         if(isUnitSelected)
-            LevelController.I.GetHouseController().SetHighlight(giftCollected);
+            LevelController.I.GetHouseController().SetHighlight(collectedGifts);
     }
 
     /// <summary>

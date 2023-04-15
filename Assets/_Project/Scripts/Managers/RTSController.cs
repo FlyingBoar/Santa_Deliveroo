@@ -38,6 +38,14 @@ public class RTSController : MonoBehaviour
         SpawnUnits(_levData);
     }
 
+    public void UnitHitByEnemy(Santa _santa)
+    {
+        LevelController.I.GetGiftController().SpawnGiftOnLocation(_santa.transform.position, _santa.GetCollectedGifts());
+        _santa.UnitHitByEnemy();
+        allUnits.Remove(_santa);
+        LevelController.I.GetPoolManager().RetrievePoollable(_santa);
+    }
+
     #endregion
 
     #region Input

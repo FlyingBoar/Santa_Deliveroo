@@ -42,6 +42,25 @@ public class GiftController : MonoBehaviour
         return g.GetGiftData();
     }
 
+    public GiftData SpawnGiftOnLocation(Vector3 _spawnPosition, GiftData _data)
+    {
+        // TODO: funzione da chiamare alla morte dell'unità Santa
+        Gift g = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Gift>(_spawnPosition);
+        g.Init(_data);
+        spawnedGifts.Add(g);
+        return g.GetGiftData();
+    }
+
+    public void SpawnGiftOnLocation(Vector3 _spawnPosition, List<GiftData> _gifts)
+    {
+        foreach (var data in _gifts)
+        {
+            Vector2 location = UnityEngine.Random.insideUnitCircle * 10f;
+            Vector3 pos = new Vector3(_spawnPosition.x - location.x, _spawnPosition.y, _spawnPosition.z - location.y);
+            SpawnGiftOnLocation(pos, data);
+        }
+    }
+
     /// <summary>
     /// Restituisce l'oggetto regalo al pooler
     /// </summary>
