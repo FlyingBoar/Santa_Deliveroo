@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New_Level", menuName = "NewLevel")]
 public class LevelData : ScriptableObject
 {
+    public int level;
     [Header("Level")]
     public int ActiveHouses;
     public int MinScoreToWin;

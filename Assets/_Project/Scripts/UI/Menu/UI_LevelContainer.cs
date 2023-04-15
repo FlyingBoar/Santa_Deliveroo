@@ -19,6 +19,7 @@ public class UI_LevelContainer : MonoBehaviour
             level.Init(data, this);
             levelList.Add(level);
         }
+        levelList.First().isFirstSelected();
     }
 
     public void LevelSelected(UI_Level _level)

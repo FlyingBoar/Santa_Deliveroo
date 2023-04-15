@@ -23,6 +23,22 @@ public class PlayerInputController : MonoBehaviour
         if (!LevelController.I.IsGameplay)
             return;
 
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            LevelController.I.GoToContextualMenu(PauseContext.Pause);
+        }
+
+        // TODO: debug da rimuovere
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            LevelController.I.GameWon();
+        }
+        // TODO: debug da rimuovere
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            LevelController.I.GameLost();
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SwitchView();

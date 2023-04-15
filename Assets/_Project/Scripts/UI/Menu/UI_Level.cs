@@ -13,21 +13,21 @@ public class UI_Level : MonoBehaviour
 
     public bool IsSelected { get; private set; }
 
-    private void Start()
-    {
-        toggle = GetComponent<Toggle>();
-        toggle.onValueChanged.AddListener(delegate { OnValueChanged(); });
-    }
-
     public void Init(LevelData _data, UI_LevelContainer _container)
     {
+        if(toggle == null)
+        {
+            toggle = GetComponent<Toggle>();
+            toggle.onValueChanged.AddListener(delegate { OnValueChanged(); });
+        }
+
         level = _data;
         selectable = GetComponent<Selectable>();
         container = _container;
         IsSelected = false;
         var text = GetComponentInChildren<TextMeshProUGUI>();
         if(text) 
-            text.text = level.name;
+            text.text = "Level" + level.level;
     }
 
     void OnValueChanged()
@@ -37,6 +37,11 @@ public class UI_Level : MonoBehaviour
             container.LevelSelected(this);
             IsSelected = true;
         }
+    }
+
+    public void isFirstSelected()
+    {
+        toggle.isOn = true;
     }
 
     public void RemoveSelected()

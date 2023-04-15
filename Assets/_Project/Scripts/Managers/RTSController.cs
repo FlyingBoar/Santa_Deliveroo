@@ -38,12 +38,24 @@ public class RTSController : MonoBehaviour
         SpawnUnits(_levData);
     }
 
+    /// <summary>
+    /// Distrugge logicamente tutte le unità spawnate in scena
+    /// </summary>
+    public void DeInit()
+    {
+        foreach (Santa unit in allUnits)
+        {
+            DestroyUnit(unit);
+        }
+
+        allUnits.Clear();
+    }
+
     public void UnitHitByEnemy(Santa _santa)
     {
         LevelController.I.GetGiftController().SpawnGiftOnLocation(_santa.transform.position, _santa.GetCollectedGifts());
-        _santa.UnitHitByEnemy();
+        DestroyUnit(_santa);
         allUnits.Remove(_santa);
-        LevelController.I.GetPoolManager().RetrievePoollable(_santa);
     }
 
     #endregion
@@ -149,5 +161,15 @@ public class RTSController : MonoBehaviour
                 allUnits.Add(unit);
             }
         }
+    }
+
+    /// <summary>
+    /// Pulisce i dati salvati nell'unità spawnata, la rimuove dalla lista di unità attive e la restituisce al pooler
+    /// </summary>
+    /// <param name="_unitToDestroy"></param>
+    void DestroyUnit(Santa _unitToDestroy)
+    {
+        _unitToDestroy.ClearUnitData();
+        LevelController.I.GetPoolManager().RetrievePoollable(_unitToDestroy);
     }
 }

@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +14,12 @@ public class UIManager : UI_ManagerBase
     /// Riferimento al pannello del gameplay
     /// </summary>
     UI_GameplayPanel gameplayPanel;
+    /// <summary>
+    /// Riferimento al pannello di pausa
+    /// </summary>
+    UI_Pause pausePanel;
+
+    [SerializeField] CanvasGroup fadePanel;
 
     /// <summary>
     /// Prende riferimento ai menu
@@ -20,12 +28,15 @@ public class UIManager : UI_ManagerBase
     {
         mainMenuPanel = GetComponentInChildren<UI_MainMenu>();
         gameplayPanel = GetComponentInChildren<UI_GameplayPanel>();
+        pausePanel = GetComponentInChildren<UI_Pause>();
     }
 
     /// <summary>
     /// Il tipo di menù attivo
     /// </summary>
     MenuType currentMenuType = MenuType.None;
+
+    public PauseContext CurrentPauseContext { get; set; }
 
     /// <summary>
     /// Seleziona il tipo di menù da attivare (normalmente da chiamare nella state machine)
@@ -53,6 +64,8 @@ public class UIManager : UI_ManagerBase
                 break;
             case MenuType.Pause:
                 /// Attiva il menù di pausa
+                pausePanel.ToggleMenu(true);
+                currentMenu = pausePanel;
                 break;
             default:
                 break;
@@ -70,6 +83,7 @@ public class UIManager : UI_ManagerBase
     {
         return gameplayPanel;
     }
+
 
     public enum MenuType
     {

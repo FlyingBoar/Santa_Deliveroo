@@ -15,10 +15,14 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     List<movementInformation> queuedActions = new List<movementInformation>();
     List<GiftData> collectedGifts = new List<GiftData>();
     bool isUnitSelected;
+    bool isUnitActive;
     IDestination currentDestination = null;
 
     private void Update()
     {
+        if (!isUnitActive)
+            return;
+
         if (agent && agent.hasPath)
         {
             DrawPath();
@@ -52,6 +56,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             orienter.Init(Camera.main.transform);
         }
 
+        isUnitActive = true;
         agent.speed = _unitSpeed;
         LevelController.I.GetRTSController().OnMassiveDeselect += OnDeselect;
     }
@@ -59,6 +64,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     public override void OnRetrieve()
     {
         LevelController.I.GetRTSController().OnMassiveDeselect -= OnDeselect;
+        isUnitActive = false;
     }
 
     /// <summary>
@@ -164,10 +170,12 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         return collectedGifts;
     }
 
-    public void UnitHitByEnemy()
+    public void ClearUnitData()
     {
         OnDeselect();
         collectedGifts.Clear();
+        lineRenderer.positionCount = 0;
+        queuedActions.Clear();
     }
 
     #endregion
@@ -239,7 +247,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// </summary>
     void UpdateSpeed()
     {
-        agent.speed = LevelController.I.GetLevelData().SantaSpeed - collectedGifts.Sum(x => x.SlowedAfterPickup);
+        agent.speed = LevelController.I.GetDataManager().GetCurrentLevelData().SantaSpeed - collectedGifts.Sum(x => x.SlowedAfterPickup);
     }
 
     void UpdateLinkedDestinations()

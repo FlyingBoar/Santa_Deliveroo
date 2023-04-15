@@ -19,6 +19,19 @@ public class EnemiesController : MonoBehaviour
         SpawnUnits(_levData);
     }
 
+    /// <summary>
+    /// Ritorna tutte le unità al pooler
+    /// </summary>
+    public void DeInit()
+    {
+        foreach (var unit in allUnits) 
+        { 
+            LevelController.I.GetPoolManager().RetrievePoollable(unit);
+        }
+
+        allUnits.Clear();
+    }
+
     public void EnemyHitUnit(Befana _befana, Santa _santa)
     {
         LevelController.I.GetPoolManager().RetrievePoollable(_befana);

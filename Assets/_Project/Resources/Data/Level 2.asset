@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 476c06de18930ca489c10734afd7e683, type: 3}
   m_Name: Level 2
   m_EditorClassIdentifier: 
+  level: 2
   ActiveHouses: 10
+  MinScoreToWin: 8
+  LevelTimerSec: 240
+  EnemySpeed: 5
   ActiveEnemies: 2
-  UnitsInLevel: 4
+  UnitsInLevel: 2
   SantaSpeed: 10
   SantaSlowedAfterPickup: 0.7
-  EnemySpeed: 6.5

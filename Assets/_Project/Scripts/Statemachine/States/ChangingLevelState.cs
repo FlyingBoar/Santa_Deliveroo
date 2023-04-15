@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayState : StateMachineBehaviour
+public class ChangingLevelState : StateMachineBehaviour
 {
     LevelController LC;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -11,8 +11,8 @@ public class GameplayState : StateMachineBehaviour
         if (LC == null)
             LC = LevelController.I;
 
-        LC.GetUIManager().ChangeMenu(UIManager.MenuType.Gameplay);
-
-        LC.IsEnteringGameplayStatus();
+        LC.GetDataManager().LoadNextLevel();
+        LC.GoToNext();
     }
+
 }

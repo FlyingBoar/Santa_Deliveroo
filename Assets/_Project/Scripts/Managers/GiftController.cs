@@ -15,7 +15,20 @@ public class GiftController : MonoBehaviour
     public void Init()
     {
         navMeshCtrl = LevelController.I.GetNavMeshCtrl();
-        slowAfterPickup = LevelController.I.GetLevelData().SantaSlowedAfterPickup;
+        slowAfterPickup = LevelController.I.GetDataManager().GetCurrentLevelData().SantaSlowedAfterPickup;
+    }
+
+    /// <summary>
+    /// Restituisce l'unità al pooler e pulisce la lista dei Gift presenti nel livello
+    /// </summary>
+    public void DeInit()
+    {
+        foreach (Gift gift in spawnedGifts)
+        {
+            LevelController.I.GetPoolManager().RetrievePoollable(gift);
+        }
+
+        spawnedGifts.Clear();
     }
 
     /// <summary>

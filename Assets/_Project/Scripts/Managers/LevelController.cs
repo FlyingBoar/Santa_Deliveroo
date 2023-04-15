@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class LevelController : MonoBehaviour
@@ -15,7 +16,7 @@ public class LevelController : MonoBehaviour
     MatrixBlender blender;
     EnemiesController enemiesCtrl;
     UIManager UIManager;
-    LevelData lvelData;
+    DataManager dataManager;
 
     #region Get & Set
 
@@ -112,9 +113,13 @@ public class LevelController : MonoBehaviour
         return I.UIManager;
     }
 
-    public LevelData GetLevelData()
+    /// <summary>
+    /// Restituisce il riferimento al manager dei dati
+    /// </summary>
+    /// <returns></returns>
+    public DataManager GetDataManager()
     {
-        return I.lvelData;
+        return I.dataManager;
     }
 
     //// ------------------------ SET ----------------------------- \\
@@ -207,6 +212,15 @@ public class LevelController : MonoBehaviour
     {
         I.UIManager = _uiManager;
     }
+
+    /// <summary>
+    /// Setta il riferimento al manager dei dati
+    /// </summary>
+    /// <param name="_dataManager"></param>
+    public void SetDataManager(DataManager _dataManager)
+    {
+        dataManager = _dataManager;
+    }
     
     #endregion
 
@@ -241,7 +255,7 @@ public class LevelController : MonoBehaviour
     /// </summary>
     public void IsEnteringGameplayStatus()
     {
-        lvelData = GetUIManager().GetMainMenu().GetCurrentLevelSelected();
+        //GetDataManager().SetCurrentLevelData(GetUIManager().GetMainMenu().GetCurrentLevelSelected());
         IsGameplay = true;
     }
 
@@ -253,6 +267,25 @@ public class LevelController : MonoBehaviour
     {
         _victoryPoints += _pointsToAdd;
         // check per le condizioni di vittoria (se tutti i regali sono stati raccolti)
+    }
+
+    public void GoToContextualMenu(PauseContext _context)
+    {
+        if (IsGameplay)
+        {
+            GetUIManager().CurrentPauseContext = _context;
+            GoToNext();
+        }
+    }
+
+    public void GameWon()
+    {
+        GoToContextualMenu(PauseContext.Won);
+    }
+
+    public void GameLost()
+    {
+        GoToContextualMenu(PauseContext.Lost);
     }
 
     #region SM triggers
@@ -271,5 +304,37 @@ public class LevelController : MonoBehaviour
         SM.SetTrigger("GoToNext");
     }
 
+    /// <summary>
+    /// Triggera il cambio di stato per andare nel menù (dal menù di pausa)
+    /// </summary>
+    public void GoToMenu()
+    {
+        SM.SetTrigger("GoToMenu");
+    }
+
+    /// <summary>
+    /// Triggera il cambio di stato per andare nel Gameplay (dal menù di pausa)
+    /// </summary>
+    public void GoToGameplay()
+    {
+        SM.SetTrigger("GoToGameplay");
+    }
+
+    /// <summary>
+    /// Triggera il cambio di stato per andare nello stato di nuovo livello (dal menù di pausa)
+    /// </summary>
+    public void GoToChangingLevel()
+    {
+        SM.SetTrigger("GoToChangingLevel");
+    }
+
+    /// <summary>
+    /// Triggera il cambio di stato per andare nello stato di pulizia livello (dal menù di pausa)
+    /// </summary>
+    public void GoToClearLevel()
+    {
+        SM.SetTrigger("GoToClearLevel");
+    }
+    
     #endregion
 }

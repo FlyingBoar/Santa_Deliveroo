@@ -50,6 +50,18 @@ public class HouseController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Setta tutte le destinazioni attive come inattive
+    /// </summary>
+    public void DeInit()
+    {
+        var activeDestinations = allDestinations.Where(x => x.IsDestinationActive == true).ToList();
+        foreach (var des in activeDestinations)
+        {
+            des.SetDestinationisActive(false);
+        }
+    }
+
     public void SetHighlight(List<GiftData> gifts)
     {
         foreach (var destination in allDestinations.Where(x => x.isActiveAndEnabled == true)) 

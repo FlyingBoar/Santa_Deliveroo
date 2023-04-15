@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayState : StateMachineBehaviour
+public class PauseState : StateMachineBehaviour
 {
     LevelController LC;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -11,8 +11,12 @@ public class GameplayState : StateMachineBehaviour
         if (LC == null)
             LC = LevelController.I;
 
-        LC.GetUIManager().ChangeMenu(UIManager.MenuType.Gameplay);
+        LC.GetUIManager().ChangeMenu(UIManager.MenuType.Pause);
+        Time.timeScale = 0;
+    }
 
-        LC.IsEnteringGameplayStatus();
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        Time.timeScale = 1;
     }
 }

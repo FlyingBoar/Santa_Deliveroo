@@ -7,21 +7,17 @@ public class UI_MainMenu : UI_MenuBase
 {
     UI_LevelContainer levelContainer;
 
-    LevelData currentLevelSelected;
+    //LevelData currentLevelSelected;
 
     public override void OnSetup()
     {
         levelContainer = GetComponentInChildren<UI_LevelContainer>();
-        levelContainer.Init(Resources.LoadAll<LevelData>("Data").ToList(), this);
-    }
-
-    public LevelData GetCurrentLevelSelected() {
-        return currentLevelSelected;
+        levelContainer.Init(LevelController.I.GetDataManager().GetAllLevels(), this);
     }
 
     public void SetcurrentLevelSelected(LevelData levelSelected)
     {
-        currentLevelSelected = levelSelected;
+        LevelController.I.GetDataManager().SetCurrentLevelData(levelSelected);
     }
 
     public void GoToGameplay()
