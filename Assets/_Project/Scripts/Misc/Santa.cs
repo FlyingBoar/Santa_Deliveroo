@@ -17,6 +17,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     List<GiftData> collectedGifts = new List<GiftData>();
     bool isUnitSelected;
     bool isUnitActive;
+    RTSController controller;
     
     IDestination currentDestination = null;
 
@@ -41,7 +42,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 
     #region API
 
-    public void Init(float _unitSpeed)
+    public void Init(float _unitSpeed, RTSController _controller)
     {
         selected.enabled = false;
         if (!agent)
@@ -58,6 +59,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             orienter.Init(Camera.main.transform);
         }
 
+        controller = _controller;
         isUnitActive = true;
         agent.speed = _unitSpeed;
         LevelController.I.GetRTSController().OnMassiveDeselect += OnDeselect;
@@ -80,7 +82,8 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             collectedGifts.Remove(item);
         }
         UpdateSpeed();
-        UpdateLinkedDestinations();
+        //UpdateLinkedDestinations();
+        UpdateUIGiftInformations();
     }
 
     /// <summary>
@@ -93,7 +96,8 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         {
             if(collectedGifts.Count > 0)
             {
-                UpdateLinkedDestinations();
+                //UpdateLinkedDestinations();
+                UpdateUIGiftInformations();
             }
         }
     }
@@ -103,6 +107,8 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// </summary>
     public void OnDeselect()
     {
+        if(isUnitSelected)
+            controller.HideGiftInformations();
         SelectedUnit(false);
     }
 
@@ -159,7 +165,8 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         }
         collectedGifts.Add(gift.GetGiftData());
         UpdateSpeed();
-        UpdateLinkedDestinations();
+        //UpdateLinkedDestinations();
+        UpdateUIGiftInformations();
         return true;
     }
 
@@ -180,6 +187,10 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         queuedActions.Clear();
     }
 
+    public bool IsAgentSelected()
+    {
+        return isUnitSelected;
+    }
     #endregion
 
     /// <summary>
@@ -252,11 +263,17 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         agent.speed = LevelController.I.GetDataManager().GetCurrentLevelData().SantaSpeed - collectedGifts.Sum(x => x.SlowedAfterPickup);
     }
 
-    void UpdateLinkedDestinations()
+    void UpdateUIGiftInformations()
     {
         if(isUnitSelected)
-            LevelController.I.GetHouseController().SetHighlight(collectedGifts);
+            controller.ShowUnitGiftInformations(GetCollectedGifts());
     }
+
+    //void UpdateLinkedDestinations()
+    //{
+    //    if(isUnitSelected)
+    //        LevelController.I.GetHouseController().SetHighlight(collectedGifts);
+    //}
 
     /// <summary>
     /// Struttura contenente le informazioni del movimento

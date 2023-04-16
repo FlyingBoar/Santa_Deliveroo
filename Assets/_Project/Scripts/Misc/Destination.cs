@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
@@ -60,6 +61,9 @@ public class Destination : MonoBehaviour, IDestination
             LevelController.I.AddVictoryPoints(droppedGifts.Count);
             if (!CheckIsDestinationNeedMoreGifts())
                 SetDestinationisActive(false);
+            
+            if(_agent.IsAgentSelected())
+                OnDeselect();
         }
     }
 
@@ -79,6 +83,7 @@ public class Destination : MonoBehaviour, IDestination
         }
         else
         {
+            OnDeselect();
             LevelController.I.GetRTSController().OnMassiveDeselect -= OnDeselect;
         }
     }

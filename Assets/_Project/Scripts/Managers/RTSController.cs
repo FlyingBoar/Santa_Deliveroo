@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using UnityEngine.EventSystems;
 
 public class RTSController : MonoBehaviour
 {
@@ -68,6 +69,15 @@ public class RTSController : MonoBehaviour
         return allUnits.Any(x => x.GetCollectedGifts().Count > 0);
     }
 
+    public void ShowUnitGiftInformations(List<GiftData> gifts)
+    {
+        LevelController.I.GetUIManager().GetGameplayPanel().UpdateGiftContainer(gifts);
+    }
+
+    public void HideGiftInformations()
+    {
+        LevelController.I.GetUIManager().GetGameplayPanel().DisableGiftcontainer();
+    }
     #endregion
 
     #region Input
@@ -96,6 +106,12 @@ public class RTSController : MonoBehaviour
     /// </summary>
     void OnLeftClickActions()
     {
+        // Se viene clickato un oggetto in UI
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction * 50);
@@ -113,8 +129,8 @@ public class RTSController : MonoBehaviour
             IInteractable interactable = hit.collider.GetComponentInChildren<IInteractable>() != null ? hit.collider.GetComponentInChildren<IInteractable>() : hit.collider.GetComponentInParent<IInteractable>();
             if (interactable != null)
             {
+                interactable.OnSelect();
                 selectedUnit = interactable;
-                selectedUnit.OnSelect();
             }
         }
     }
@@ -165,10 +181,10 @@ public class RTSController : MonoBehaviour
         for (int i = 0; i < _levData.UnitsInLevel; i++)
         {
             Vector3 pos = spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
-            if(pos != null)
+            if (pos != null)
             {
                 Santa unit = LevelController.I.GetPoolManager().GetFirstAvaiableObject<Santa>(transform, pos);
-                unit.Init(_levData.SantaSpeed);
+                unit.Init(_levData.SantaSpeed, this);
                 allUnits.Add(unit);
             }
         }
@@ -178,11 +194,11 @@ public class RTSController : MonoBehaviour
     /// Pulisce i dati salvati nell'unità spawnata, la rimuove dalla lista di unità attive e la restituisce al pooler
     /// </summary>
     /// <param name="_unitToDestroy"></param>
-    void DestroyUnit(Santa _unitToDestroy, bool _isLevelReset = false )
+    void DestroyUnit(Santa _unitToDestroy, bool _isLevelReset = false)
     {
         _unitToDestroy.ClearUnitData();
         LevelController.I.GetPoolManager().RetrievePoollable(_unitToDestroy);
-        if(!_isLevelReset) 
+        if (!_isLevelReset)
             LevelController.I.CheckGameStatus();
     }
 }

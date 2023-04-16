@@ -15,7 +15,15 @@ public class UI_GameplayPanel : UI_MenuBase
 
     [SerializeField]
     TextMeshProUGUI pointsCounter;
+
+    UI_CollectedGiftController collectedGiftController;
     int pointsForLevel;
+
+    public override void OnSetup()
+    {
+        collectedGiftController = GetComponentInChildren<UI_CollectedGiftController>();
+        collectedGiftController.Setup();
+    }
 
     public void Init(LevelData _data)
     {
@@ -23,6 +31,7 @@ public class UI_GameplayPanel : UI_MenuBase
         timeSlider.value = _data.LevelTimerSec;
         pointsForLevel = _data.MinScoreToWin;
         UpdatePoints(0);
+        DisableGiftcontainer();
     }
 
     public void UpdateTime(float _time)
@@ -35,4 +44,13 @@ public class UI_GameplayPanel : UI_MenuBase
         pointsCounter.text = _points + "/" + pointsForLevel;
     }
 
+    public void UpdateGiftContainer(List<GiftData> _datas)
+    {
+        collectedGiftController.ActivateGiftPanel(_datas);
+    }
+
+    public void DisableGiftcontainer()
+    {
+        collectedGiftController.RemoveDatas();
+    }
 }
