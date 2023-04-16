@@ -12,6 +12,7 @@ public class PauseState : StateMachineBehaviour
             LC = LevelController.I;
 
         LC.GetUIManager().ChangeMenu(UIManager.MenuType.Pause);
+        LC.LeavingGameplay();
         Time.timeScale = 0;
     }
 

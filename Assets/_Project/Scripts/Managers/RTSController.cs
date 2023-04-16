@@ -145,9 +145,10 @@ public class RTSController : MonoBehaviour
         // Se viene colpita la superficie del navmesh
         else if (Physics.Raycast(ray, out hit, 500.0f, _NAVMESH_LAYER))
         {
-            if (selectedUnit != null)
+            var santa = (selectedUnit as IMooveAndInteract);
+            if (santa != null)
             {
-                (selectedUnit as IMooveAndInteract).OnAction(hit.point, _isQueued);
+                santa.OnAction(hit.point, _isQueued);
             }
         }
 

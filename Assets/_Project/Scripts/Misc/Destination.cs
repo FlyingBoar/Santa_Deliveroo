@@ -58,6 +58,8 @@ public class Destination : MonoBehaviour, IDestination
         {
             _agent.RemoveGifts(droppedGifts);
             LevelController.I.AddVictoryPoints(droppedGifts.Count);
+            if (!CheckIsDestinationNeedMoreGifts())
+                SetDestinationisActive(false);
         }
     }
 
@@ -131,6 +133,15 @@ public class Destination : MonoBehaviour, IDestination
             }
         }
         return giftDropped;
+    }
+
+    bool CheckIsDestinationNeedMoreGifts()
+    {
+        if(giftsToBeDelivered.Count > 0)
+        {
+            return true;
+        }
+        return false;
     }
 
 }

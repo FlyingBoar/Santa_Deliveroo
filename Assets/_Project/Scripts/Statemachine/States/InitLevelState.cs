@@ -18,6 +18,8 @@ public class InitLevelState : StateMachineBehaviour
         LC.GetHouseController().Init(LC.GetDataManager().GetCurrentLevelData());
         LC.GetEnemiesController().Init(LC.GetDataManager().GetCurrentLevelData());
         LC.GetUIManager().Init(LC.GetDataManager().GetCurrentLevelData());
+        LC.GetInputController().EnteringGameplay();
+        LC.GetCameraController().EnteringGameplay(LC.GetInputController().isRTSView);
 
         LC.GoToNext();
     }

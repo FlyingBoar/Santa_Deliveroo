@@ -9,14 +9,15 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 {
     [SerializeField]
     SpriteRenderer selected;
+    [SerializeField] int maxCollectableGifts = 5;
     NavMeshAgent agent;
     LineRenderer lineRenderer;
-
+    
     List<movementInformation> queuedActions = new List<movementInformation>();
     List<GiftData> collectedGifts = new List<GiftData>();
     bool isUnitSelected;
     bool isUnitActive;
-    int maxCollectableGifts = 5;
+    
     IDestination currentDestination = null;
 
     private void Update()
@@ -152,7 +153,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// <param name="gift"></param>
     public bool CollectGift(Gift gift)
     {
-        if(collectedGifts.Count == maxCollectableGifts && collectedGifts.Contains(gift.GetGiftData()))
+        if(collectedGifts.Count >= maxCollectableGifts || collectedGifts.Contains(gift.GetGiftData()))
         {
             return false;
         }

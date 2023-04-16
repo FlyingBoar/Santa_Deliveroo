@@ -278,6 +278,11 @@ public class LevelController : MonoBehaviour
         IsGameplay = true;
     }
 
+    public void LeavingGameplay()
+    {
+        IsGameplay = false;
+    }
+
     /// <summary>
     /// Aggiunge i punti vittoria ottenuti
     /// </summary>

@@ -17,6 +17,11 @@ public class PlayerInputController : MonoBehaviour
         isRTSView = false;
     }
 
+    public void EnteringGameplay()
+    {
+        isRTSView = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -26,17 +31,6 @@ public class PlayerInputController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             LevelController.I.GoToContextualMenu(PauseContext.Pause);
-        }
-
-        // TODO: debug da rimuovere
-        if (Input.GetKeyUp(KeyCode.O))
-        {
-            LevelController.I.GameWon();
-        }
-        // TODO: debug da rimuovere
-        if (Input.GetKeyUp(KeyCode.P))
-        {
-            LevelController.I.GameLost();
         }
 
         if (Input.GetKeyDown(KeyCode.Space))

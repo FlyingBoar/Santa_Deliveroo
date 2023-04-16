@@ -28,12 +28,21 @@ public class CameraController : MonoBehaviour
 
     public void Setup(bool _isRTSViewEnabled, MatrixBlender _blender)
     {
+        
         tacticalView = FindObjectsOfType<Transform>().First(x => x.tag == "TacticalView");
         cam = Camera.main;
         camTransform = cam.GetComponent<Transform>();
         UpdateMouseActivationStatus();
         blender = _blender;
         overlaycam.enabled = false;
+        SavePreviousPositionAndRotation();
+        SwitchView(_isRTSViewEnabled);
+    }
+
+    public void EnteringGameplay(bool _isRTSViewEnabled)
+    {
+        UpdateMouseActivationStatus(!_isRTSViewEnabled);
+        SwitchView(_isRTSViewEnabled);
     }
 
     public void DetectInput()
@@ -88,27 +97,41 @@ public class CameraController : MonoBehaviour
         {
             UpdateMouseActivationStatus();
             blender.BlendToMatrix(MatrixBlender.OrthoMatrix, 1.5f);
-            origianlLocation = camTransform.localPosition;
-            origianlRotation = camTransform.rotation;
+            SavePreviousPositionAndRotation();
             camTransform.DOMove(tacticalView.position, cameraAnimationSpeed).OnComplete(() => { overlaycam.enabled = true; });
             camTransform.DORotateQuaternion(tacticalView.rotation, cameraAnimationSpeed);
         }
         else
         {
             overlaycam.enabled = false;
-            camTransform.DOMove(origianlLocation, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
-            camTransform.DORotateQuaternion(origianlRotation, cameraAnimationSpeed);
+
+            if(transform.position != camTransform.position)
+            {
+                camTransform.DOMove(origianlLocation, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
+                camTransform.DORotateQuaternion(origianlRotation, cameraAnimationSpeed);
+            }
+            else
+            {
+                UpdateMouseActivationStatus();
+            }
+
             blender.BlendToMatrix(MatrixBlender.PerspectiveMatrix, 1f);
         }
 
     }
 
+    void SavePreviousPositionAndRotation()
+    {
+        origianlLocation = camTransform.localPosition;
+        origianlRotation = camTransform.rotation;
+    }
+
     /// <summary>
     /// Aggiorna lo stato del mouse in base al tipo dicontrollo attuale
     /// </summary>
-    void UpdateMouseActivationStatus()
+    void UpdateMouseActivationStatus(bool? _forceStatus = null)
     {
-        isMouseRotationEnable = !LevelController.I.GetInputController().isRTSView;
+        isMouseRotationEnable = _forceStatus != null ? _forceStatus.Value : (!LevelController.I.GetInputController().isRTSView) && LevelController.I.IsGameplay;
     }
 
 }

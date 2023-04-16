@@ -26,12 +26,12 @@ public class SetupState : StateMachineBehaviour
 
         LC.GetPoolManager().Setup();
         LC.GetDataManager().Setup();
+        LC.GetMatrixBlender().Setup();
         LC.GetInputController().Setup(LC.GetCameraController(), LC.GetRTSController());
         LC.GetCameraController().Setup(LC.GetInputController().isRTSView, LC.GetMatrixBlender());
         LC.GetRTSController().Setup();
         LC.GetNavMeshCtrl().Setup();
         LC.GetHouseController().Setup(LC.GetGiftController());
-        LC.GetMatrixBlender().Setup();
         LC.GetUIManager().Setup();
         
         LC.GoToNext();
