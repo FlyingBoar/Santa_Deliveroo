@@ -330,21 +330,32 @@ public class LevelController : MonoBehaviour
             else
             {
                 GameWon();
-            }
-        }
-
-        //Check se il numero di Santa nel livello è > 0
-        if (!GetRTSController().StillUnitInLevel())
+            } 
+        }else if (!GetRTSController().StillUnitInLevel())        
         {
+            //Check se il numero di Santa nel livello è > 0
             GameLost();
         }
-
-        // Check se il numero di regali attivi nel livello è <= 0 e nessuna unità ne sta trasportando allora tutti i regali sono stati consegnati (Super vittoria)
-        if (!giftCtrl.StillGiftsInLevel() && !GetRTSController().UnitAreCarryingGifts())
+        else if (IsMathematicalDefeat())
         {
+            // Se il numero di regali in gioco non è abbastanza per completare il livello
+            GameLost();
+        }
+        else if (!giftCtrl.StillGiftsInLevel() && !GetRTSController().UnitAreCarryingGifts()) 
+        {
+            // Check se il numero di regali attivi nel livello è <= 0 e nessuna unità ne sta trasportando allora tutti i regali sono stati consegnati (Super vittoria)
             GameWon();
         }
 
+    }
+
+    bool IsMathematicalDefeat()
+    {
+        if(GetGiftController().GiftInLevelCount() + GetRTSController().GetGiftCollectedCount() < GetDataManager().GetCurrentLevelData().MinScoreToWin - victoryPoints)
+        {
+            return true;
+        }
+        return false;
     }
 
     IEnumerator GameTimer()

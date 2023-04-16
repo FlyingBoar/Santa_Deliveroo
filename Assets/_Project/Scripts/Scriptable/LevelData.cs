@@ -9,6 +9,7 @@ public class LevelData : ScriptableObject
     public int level;
     [Header("Level")]
     public int ActiveHouses;
+    public int TotalGiftInLevel;
     public int MinScoreToWin;
     public float LevelTimerSec;
     [Header("Ememy")]

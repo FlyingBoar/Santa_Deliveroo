@@ -100,4 +100,9 @@ public class GiftController : MonoBehaviour
     {
         return spawnedGifts.Any();
     }
+
+    public int GiftInLevelCount()
+    {
+        return spawnedGifts.Count();
+    }
 }

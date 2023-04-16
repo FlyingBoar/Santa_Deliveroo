@@ -54,7 +54,7 @@ public class RTSController : MonoBehaviour
 
     public void UnitHitByEnemy(Santa _santa)
     {
-        LevelController.I.GetGiftController().SpawnGiftOnLocation(_santa.transform.position, _santa.GetCollectedGifts());
+        //LevelController.I.GetGiftController().SpawnGiftOnLocation(_santa.transform.position, _santa.GetCollectedGifts());
         allUnits.Remove(_santa);
         DestroyUnit(_santa);
     }
@@ -77,6 +77,18 @@ public class RTSController : MonoBehaviour
     public void HideGiftInformations()
     {
         LevelController.I.GetUIManager().GetGameplayPanel().DisableGiftcontainer();
+    }
+
+    public int GetGiftCollectedCount()
+    {
+        int totalGiftsOnAgents = 0;
+
+        foreach (var agent in allUnits)
+        {
+            totalGiftsOnAgents += agent.GetCollectedGifts().Count();
+        }
+
+        return totalGiftsOnAgents;
     }
     #endregion
 

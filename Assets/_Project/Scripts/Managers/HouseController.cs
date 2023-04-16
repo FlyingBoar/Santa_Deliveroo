@@ -30,7 +30,8 @@ public class HouseController : MonoBehaviour
     public void Init(LevelData _currentLevel)
     {
         // Determina il numero di regali per ogni casa in base ai minimi punti necessari per il livello
-        int giftPerHouse = (_currentLevel.MinScoreToWin + _currentLevel.ActiveHouses - 1 ) / _currentLevel.ActiveHouses;
+        int giftInLevel = _currentLevel.TotalGiftInLevel < _currentLevel.MinScoreToWin ? _currentLevel.MinScoreToWin : _currentLevel.TotalGiftInLevel;
+        int giftPerHouse = (giftInLevel + _currentLevel.ActiveHouses - 1 ) / _currentLevel.ActiveHouses;
         // Sceglie le case che devono essere attive per il livello
         for (int i = 0; i < _currentLevel.ActiveHouses; i++)
         {
