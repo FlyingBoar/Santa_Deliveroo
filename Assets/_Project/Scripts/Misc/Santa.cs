@@ -16,6 +16,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     List<GiftData> collectedGifts = new List<GiftData>();
     bool isUnitSelected;
     bool isUnitActive;
+    int maxCollectableGifts = 5;
     IDestination currentDestination = null;
 
     private void Update()
@@ -149,16 +150,16 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// Aggiunge il regalo passato come parametro alla lista di regali se non presente
     /// </summary>
     /// <param name="gift"></param>
-    public void CollectGift(Gift gift)
+    public bool CollectGift(Gift gift)
     {
-        if (collectedGifts.Contains(gift.GetGiftData()))
+        if(collectedGifts.Count == maxCollectableGifts && collectedGifts.Contains(gift.GetGiftData()))
         {
-            return;
+            return false;
         }
-
         collectedGifts.Add(gift.GetGiftData());
         UpdateSpeed();
         UpdateLinkedDestinations();
+        return true;
     }
 
     /// <summary>

@@ -48,8 +48,9 @@ public class Gift : PoolObjectBase, IDestination
 
     public void AgentOnDestination(Santa _agent)
     {
-        _agent.CollectGift(this);
-        LevelController.I.GetGiftController().GifCollected(this);
+        if (_agent.CollectGift(this)){
+            LevelController.I.GetGiftController().GifCollected(this);
+        }
     }
 
     public GiftData GetGiftData()
