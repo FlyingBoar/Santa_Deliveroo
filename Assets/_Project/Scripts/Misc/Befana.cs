@@ -57,7 +57,14 @@ public class Befana : PoolObjectBase
 
             if (currentTarget)
             {
-                agent.SetDestination(currentTarget.transform.position);
+                if (!LevelController.I.GetNavMeshCtrl().IsPointOnNavmesh(currentTarget.transform.position))
+                {
+                    currentTarget = null;
+                }
+                else
+                {
+                    agent.SetDestination(currentTarget.transform.position);
+                }
             }
 
             if (!currentTarget && !agent.hasPath)

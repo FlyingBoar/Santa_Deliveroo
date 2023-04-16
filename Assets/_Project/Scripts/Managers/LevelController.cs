@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
@@ -221,12 +222,24 @@ public class LevelController : MonoBehaviour
     {
         dataManager = _dataManager;
     }
-    
+
     #endregion
 
     public static LevelController I;
 
     private int _victoryPoints;
+    private int victoryPoints
+    {
+        get { return _victoryPoints; }
+        set
+        {
+            _victoryPoints = value;
+            GetUIManager().GetGameplayPanel().UpdatePoints(victoryPoints);
+        }
+    }
+
+    float timer;
+    Coroutine timerCoroutine;
 
     public bool IsGameplay { get; private set; }
 
@@ -250,12 +263,18 @@ public class LevelController : MonoBehaviour
         StartSM();
     }
 
+    public void Init()
+    {
+        victoryPoints = 0;
+        timer = dataManager.GetCurrentLevelData().LevelTimerSec;
+        timerCoroutine = StartCoroutine("GameTimer");
+    }
+
     /// <summary>
     /// Informazione se il gioco si trova nello stato di gameplay
     /// </summary>
     public void IsEnteringGameplayStatus()
     {
-        //GetDataManager().SetCurrentLevelData(GetUIManager().GetMainMenu().GetCurrentLevelSelected());
         IsGameplay = true;
     }
 
@@ -265,8 +284,9 @@ public class LevelController : MonoBehaviour
     /// <param name="_pointsToAdd"></param>
     public void AddVictoryPoints(int _pointsToAdd)
     {
-        _victoryPoints += _pointsToAdd;
+        victoryPoints += _pointsToAdd;
         // check per le condizioni di vittoria (se tutti i regali sono stati raccolti)
+        CheckGameStatus();
     }
 
     public void GoToContextualMenu(PauseContext _context)
@@ -281,11 +301,62 @@ public class LevelController : MonoBehaviour
     public void GameWon()
     {
         GoToContextualMenu(PauseContext.Won);
+        StopCoroutine(timerCoroutine);
     }
 
     public void GameLost()
     {
         GoToContextualMenu(PauseContext.Lost);
+        StopCoroutine(timerCoroutine);
+    }
+
+    public void CheckGameStatus()
+    {
+        if (!IsGameplay)
+            return;
+
+        if (timer <= 0)
+        {
+            // check se i punti raccolti sono maggiori del minimo per vincere
+            if (victoryPoints < GetDataManager().GetCurrentLevelData().MinScoreToWin)
+            {
+                GameLost();
+            }
+            else
+            {
+                GameWon();
+            }
+        }
+
+        //Check se il numero di Santa nel livello è > 0
+        if (!GetRTSController().StillUnitInLevel())
+        {
+            GameLost();
+        }
+
+        // Check se il numero di regali attivi nel livello è <= 0 e nessuna unità ne sta trasportando allora tutti i regali sono stati consegnati (Super vittoria)
+        if (!giftCtrl.StillGiftsInLevel() && !GetRTSController().UnitAreCarryingGifts())
+        {
+            GameWon();
+        }
+
+    }
+
+    IEnumerator GameTimer()
+    {
+        while (timer > 0)
+        {
+            GetUIManager().GetGameplayPanel().UpdateTime(timer);
+            timer -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (timer <= 0)
+        {
+            CheckGameStatus();
+        }
+
+        yield return new WaitForEndOfFrame();
     }
 
     #region SM triggers
@@ -335,6 +406,6 @@ public class LevelController : MonoBehaviour
     {
         SM.SetTrigger("GoToClearLevel");
     }
-    
+
     #endregion
 }

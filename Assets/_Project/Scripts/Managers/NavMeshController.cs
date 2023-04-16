@@ -27,7 +27,7 @@ public class NavMeshController : MonoBehaviour
         do
         {
             randomSpot = new Vector3(Random.Range(floor.min.x, floor.max.x), navMeshPanelPos.y, Random.Range(floor.min.z, floor.max.z));
-        } while (!isPointOnNavmesh(randomSpot));
+        } while (!IsPointOnNavmesh(randomSpot));
 
         return randomSpot;
     }
@@ -37,7 +37,7 @@ public class NavMeshController : MonoBehaviour
     /// </summary>
     /// <param name="_pos"></param>
     /// <returns></returns>
-    bool isPointOnNavmesh(Vector3 _pos)
+    public bool IsPointOnNavmesh(Vector3 _pos)
     {
         NavMeshPath navMeshPath = new NavMeshPath();
         bool cancomplete = NavMesh.CalculatePath(navMeshPanelPos, _pos, 1,navMeshPath);

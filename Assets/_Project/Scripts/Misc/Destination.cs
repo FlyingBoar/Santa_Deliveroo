@@ -56,8 +56,8 @@ public class Destination : MonoBehaviour, IDestination
         List<GiftData> droppedGifts = GetRightGiftsFromList(_agent.GetCollectedGifts());
         if (droppedGifts.Count > 0)
         {
-            LevelController.I.AddVictoryPoints(droppedGifts.Count);
             _agent.RemoveGifts(droppedGifts);
+            LevelController.I.AddVictoryPoints(droppedGifts.Count);
         }
     }
 

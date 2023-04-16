@@ -82,6 +82,7 @@ public class GiftController : MonoBehaviour
     {
         LevelController.I.GetPoolManager().RetrievePoollable(gift);
         spawnedGifts.Remove(gift);
+        LevelController.I.CheckGameStatus();
     }
 
     public void SetHighlight(Destination _destination)
@@ -93,5 +94,10 @@ public class GiftController : MonoBehaviour
             else
                 gift.OnDeselect();
         }   
+    }
+
+    public bool StillGiftsInLevel()
+    {
+        return spawnedGifts.Any();
     }
 }

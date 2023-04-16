@@ -38,6 +38,11 @@ public class UIManager : UI_ManagerBase
 
     public PauseContext CurrentPauseContext { get; set; }
 
+    public void Init(LevelData _data)
+    {
+        gameplayPanel.Init(_data);
+    }
+
     /// <summary>
     /// Seleziona il tipo di menù da attivare (normalmente da chiamare nella state machine)
     /// </summary>

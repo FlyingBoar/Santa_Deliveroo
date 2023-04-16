@@ -36,6 +36,7 @@ public class EnemiesController : MonoBehaviour
     {
         LevelController.I.GetPoolManager().RetrievePoollable(_befana);
         LevelController.I.GetRTSController().UnitHitByEnemy(_santa);
+        //LevelController.I.CheckGameStatus();
     }
 
     /// <summary>

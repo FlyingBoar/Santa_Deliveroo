@@ -11,10 +11,14 @@ public class InitLevelState : StateMachineBehaviour
         if (LC == null)
             LC = LevelController.I;
 
+
+        LC.Init();
         LC.GetGiftController().Init();
         LC.GetRTSController().Init(LC.GetDataManager().GetCurrentLevelData());
         LC.GetHouseController().Init(LC.GetDataManager().GetCurrentLevelData());
         LC.GetEnemiesController().Init(LC.GetDataManager().GetCurrentLevelData());
+        LC.GetUIManager().Init(LC.GetDataManager().GetCurrentLevelData());
+
         LC.GoToNext();
     }
 }
