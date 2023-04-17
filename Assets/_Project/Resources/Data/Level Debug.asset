@@ -18,7 +18,7 @@ MonoBehaviour:
   MinScoreToWin: 2
   LevelTimerSec: 10000
   EnemySpeed: 4
-  ActiveEnemies: 1
+  ActiveEnemies: 0
   UnitsInLevel: 2
   SantaSpeed: 15
   SantaSlowedAfterPickup: 0

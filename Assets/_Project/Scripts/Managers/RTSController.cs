@@ -52,6 +52,10 @@ public class RTSController : MonoBehaviour
         allUnits.Clear();
     }
 
+    /// <summary>
+    /// Registra che l'unità indicata è stata intercettata da un nemico e deve essere rimossa dal livello
+    /// </summary>
+    /// <param name="_santa"></param>
     public void UnitHitByEnemy(Santa _santa)
     {
         //LevelController.I.GetGiftController().SpawnGiftOnLocation(_santa.transform.position, _santa.GetCollectedGifts());
@@ -59,26 +63,45 @@ public class RTSController : MonoBehaviour
         DestroyUnit(_santa);
     }
 
+    /// <summary>
+    /// Check se esistono ancora unità attive nel livello
+    /// </summary>
+    /// <returns></returns>
     public bool StillUnitInLevel()
     {
         return allUnits.Any();
     }
 
+    /// <summary>
+    /// Check per controllare se c'è almeno un'unità che sta trasportando regali
+    /// </summary>
+    /// <returns></returns>
     public bool UnitAreCarryingGifts()
     {
         return allUnits.Any(x => x.GetCollectedGifts().Count > 0);
     }
 
+    /// <summary>
+    /// Mostra nella UI i regali passati come parametro
+    /// </summary>
+    /// <param name="gifts"></param>
     public void ShowUnitGiftInformations(List<GiftData> gifts)
     {
         LevelController.I.GetUIManager().GetGameplayPanel().UpdateGiftContainer(gifts);
     }
 
+    /// <summary>
+    /// Disabilita la UI che mostra le informazioni dei pacchi trasportati dall'unità
+    /// </summary>
     public void HideGiftInformations()
     {
         LevelController.I.GetUIManager().GetGameplayPanel().DisableGiftcontainer();
     }
 
+    /// <summary>
+    /// Restituisce il totale di tutti i pacchi trasportati dalle unità
+    /// </summary>
+    /// <returns></returns>
     public int GetGiftCollectedCount()
     {
         int totalGiftsOnAgents = 0;

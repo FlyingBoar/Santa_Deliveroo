@@ -153,7 +153,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             {
                 if (queuedActions.Count > 0)
                 {
-                    queuedActions.Clear();
+                    ClearActionQueued();
                 }
                 SetAgentDestination(movement);
             }
@@ -191,7 +191,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
         OnDeselect();
         collectedGifts.Clear();
         lineRenderer.positionCount = 0;
-        queuedActions.Clear();
+        ClearActionQueued();
     }
 
     public bool IsAgentSelected()
@@ -265,7 +265,14 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             }
 
             NavMeshPath path = LevelController.I.GetNavMeshCtrl().GetPathToPoint(startPos, queuedActions[i].position);
-            DrawPathForLineRenderer(_line.GetLineRenderer(), startPos, path.corners);
+            if(path != null)
+            {
+                DrawPathForLineRenderer(_line.GetLineRenderer(), startPos, path.corners);
+            }
+            else
+            {
+                LevelController.I.GetPoolManager().RetrievePoollable(_line);
+            }
         }
     }
 
@@ -301,7 +308,14 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             controller.ShowUnitGiftInformations(GetCollectedGifts());
     }
 
-    
+    void ClearActionQueued()
+    {
+        foreach (var item in queuedActions)
+        {
+            LevelController.I.GetPoolManager().RetrievePoollable(item.lineRenderer);
+        }
+        queuedActions.Clear();
+    }
 
     /// <summary>
     /// Struttura contenente le informazioni del movimento

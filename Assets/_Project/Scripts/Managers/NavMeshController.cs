@@ -43,6 +43,12 @@ public class NavMeshController : MonoBehaviour
         return navMeshPath != null ? true : false;
     }
 
+    /// <summary>
+    /// Calcola il path utilizzabile fra due punti, nullo se non è stato possibile trovare un path
+    /// </summary>
+    /// <param name="_startPos"></param>
+    /// <param name="_endPos"></param>
+    /// <returns></returns>
     public NavMeshPath GetPathToPoint(Vector3 _startPos, Vector3 _endPos)
     {
         NavMeshPath navMeshPath = new NavMeshPath();
