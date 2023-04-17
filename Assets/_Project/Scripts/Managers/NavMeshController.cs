@@ -39,17 +39,21 @@ public class NavMeshController : MonoBehaviour
     /// <returns></returns>
     public bool IsPointOnNavmesh(Vector3 _pos)
     {
+        NavMeshPath navMeshPath = GetPathToPoint(navMeshPanelPos, _pos);
+        return navMeshPath != null ? true : false;
+    }
+
+    public NavMeshPath GetPathToPoint(Vector3 _startPos, Vector3 _endPos)
+    {
         NavMeshPath navMeshPath = new NavMeshPath();
-        bool cancomplete = NavMesh.CalculatePath(navMeshPanelPos, _pos, 1,navMeshPath);
+        bool cancomplete = NavMesh.CalculatePath(_startPos, _endPos, 1, navMeshPath);
         if (cancomplete && navMeshPath.status == NavMeshPathStatus.PathComplete)
         {
-            // the target can be reached
-            return true;
+            return navMeshPath;
         }
         else
         {
-            // no path for target
-            return false;
+            return null;
         }
     }
 }

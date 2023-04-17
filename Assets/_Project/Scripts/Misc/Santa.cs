@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class Santa : PoolObjectBase, IMooveAndInteract
 {
@@ -35,6 +37,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             if (queuedActions.Count > 0)
             {
                 SetAgentDestination(queuedActions[0]);
+                LevelController.I.GetPoolManager().RetrievePoollable(queuedActions[0].lineRenderer);
                 queuedActions.RemoveAt(0);
             }
         }
@@ -140,7 +143,11 @@ public class Santa : PoolObjectBase, IMooveAndInteract
 
             if (_isQueueAction)
             {
+                QueueLineRenderer lr = LevelController.I.GetPoolManager().GetFirstAvaiableObject<QueueLineRenderer>();
+                movement.lineRenderer = lr;
                 queuedActions.Add(movement);
+                if (lr != null) 
+                    DrawQueuedPath(lr);
             }
             else
             {
@@ -239,19 +246,44 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     /// </summary>
     void DrawPath()
     {
-        int corners = agent.path.corners.Length;
-        lineRenderer.positionCount = corners;
-        lineRenderer.SetPosition(0, transform.position);
+        DrawPathForLineRenderer(lineRenderer, transform.position, agent.path.corners);
+    }
 
-        if (corners < 2)
+    void DrawQueuedPath(QueueLineRenderer _line)
+    {
+        _line.SetColor(Color.yellow);
+        for (int i = 0; i < queuedActions.Count; i++)
+        {
+            Vector3 startPos;
+            if (i == 0)
+            {
+                startPos = agent.destination;
+            }
+            else
+            {
+                startPos = queuedActions[i - 1].position;
+            }
+
+            NavMeshPath path = LevelController.I.GetNavMeshCtrl().GetPathToPoint(startPos, queuedActions[i].position);
+            DrawPathForLineRenderer(_line.GetLineRenderer(), startPos, path.corners);
+        }
+    }
+
+    void DrawPathForLineRenderer(LineRenderer _line, Vector3 _startPosition ,Vector3[] _cornerMatrix)
+    {
+        int _corners = _cornerMatrix.Length;
+        _line.positionCount = _corners;
+        _line.SetPosition(0, _startPosition);
+
+        if (_corners < 2)
         {
             return;
         }
 
-        for (int i = 0; i < corners; i++)
+        for (int i = 0; i < _corners; i++)
         {
-            Vector3 point = new Vector3(agent.path.corners[i].x, agent.path.corners[i].y, agent.path.corners[i].z);
-            lineRenderer.SetPosition(i, point);
+            Vector3 point = new Vector3(_cornerMatrix[i].x, _cornerMatrix[i].y, _cornerMatrix[i].z);
+            _line.SetPosition(i, point);
         }
     }
 
@@ -269,11 +301,7 @@ public class Santa : PoolObjectBase, IMooveAndInteract
             controller.ShowUnitGiftInformations(GetCollectedGifts());
     }
 
-    //void UpdateLinkedDestinations()
-    //{
-    //    if(isUnitSelected)
-    //        LevelController.I.GetHouseController().SetHighlight(collectedGifts);
-    //}
+    
 
     /// <summary>
     /// Struttura contenente le informazioni del movimento
@@ -282,5 +310,6 @@ public class Santa : PoolObjectBase, IMooveAndInteract
     {
         public Vector3 position;
         public IDestination interactable;
+        public QueueLineRenderer lineRenderer;
     }
 }

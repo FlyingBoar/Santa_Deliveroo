@@ -174,7 +174,7 @@ public class RTSController : MonoBehaviour
         else if (Physics.Raycast(ray, out hit, 500.0f, _NAVMESH_LAYER))
         {
             var santa = (selectedUnit as IMooveAndInteract);
-            if (santa != null)
+            if (santa != null && hit.point != null)
             {
                 santa.OnAction(hit.point, _isQueued);
             }

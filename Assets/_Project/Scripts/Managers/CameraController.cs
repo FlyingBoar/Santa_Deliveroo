@@ -15,6 +15,9 @@ public class CameraController : MonoBehaviour
     float cameraAnimationSpeed = 1.5f;
 
     [SerializeField]
+    Transform cameraStartPosition;
+
+    [SerializeField]
     Camera overlaycam;
     Transform camTransform;
     Camera cam;
@@ -105,21 +108,23 @@ public class CameraController : MonoBehaviour
         {
             overlaycam.enabled = false;
 
-            if(transform.position != camTransform.position)
+            if(transform.position != cameraStartPosition.position)
             {
-                camTransform.DOMove(origianlLocation, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
-                camTransform.DORotateQuaternion(origianlRotation, cameraAnimationSpeed);
+                camTransform.DOMove(cameraStartPosition.position, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
+                camTransform.DORotateQuaternion(cameraStartPosition.rotation, cameraAnimationSpeed);
             }
             else
             {
                 UpdateMouseActivationStatus();
             }
-
             blender.BlendToMatrix(MatrixBlender.PerspectiveMatrix, 1f);
         }
 
     }
 
+    /// <summary>
+    /// Salva la posizione nel mondo di gioco per essere usata nel momento in cui deve tornare in free roaming
+    /// </summary>
     void SavePreviousPositionAndRotation()
     {
         origianlLocation = camTransform.localPosition;
