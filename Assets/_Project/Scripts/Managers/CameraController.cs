@@ -23,10 +23,9 @@ public class CameraController : MonoBehaviour
     Camera cam;
     bool isMouseRotationEnable;
     Vector2 mouseRotation;
+    public bool isCameraSwitching {  get; private set; }
 
     Transform tacticalView;
-    Vector3 origianlLocation;
-    Quaternion origianlRotation;
     MatrixBlender blender;
 
     public void Setup(bool _isRTSViewEnabled, MatrixBlender _blender)
@@ -38,8 +37,15 @@ public class CameraController : MonoBehaviour
         UpdateMouseActivationStatus();
         blender = _blender;
         overlaycam.enabled = false;
-        SavePreviousPositionAndRotation();
         SwitchView(_isRTSViewEnabled);
+    }
+
+    public void ResetCameraPosition()
+    {
+        if(camTransform.position != cam.transform.position)
+        {
+            MoveCameraOnPosition(cameraStartPosition.position, cameraStartPosition.rotation);
+        }
     }
 
     public void EnteringGameplay(bool _isRTSViewEnabled)
@@ -96,39 +102,54 @@ public class CameraController : MonoBehaviour
     /// <param name="_isRtsView"></param>
     public void SwitchView(bool _isRtsView)
     {
+        if(isCameraSwitching) 
+        { 
+            return; 
+        }
+
+        isCameraSwitching = true;
         if (_isRtsView)
         {
             UpdateMouseActivationStatus();
             blender.BlendToMatrix(MatrixBlender.OrthoMatrix, 1.5f);
-            SavePreviousPositionAndRotation();
-            camTransform.DOMove(tacticalView.position, cameraAnimationSpeed).OnComplete(() => { overlaycam.enabled = true; });
+            camTransform.DOMove(tacticalView.position, cameraAnimationSpeed).OnComplete(() => 
+            { 
+                overlaycam.enabled = true;
+                Cursor.visible = true;
+                isCameraSwitching = false;
+            });
             camTransform.DORotateQuaternion(tacticalView.rotation, cameraAnimationSpeed);
         }
         else
         {
             overlaycam.enabled = false;
+            Cursor.visible = false;
 
-            if(transform.position != cameraStartPosition.position)
+            if (camTransform.position != cameraStartPosition.position)
             {
-                camTransform.DOMove(cameraStartPosition.position, cameraAnimationSpeed).OnComplete(() => { UpdateMouseActivationStatus(); });
-                camTransform.DORotateQuaternion(cameraStartPosition.rotation, cameraAnimationSpeed);
+                MoveCameraOnPosition(cameraStartPosition.position, cameraStartPosition.rotation, () => { 
+                    UpdateMouseActivationStatus();
+                    isCameraSwitching = false;
+                });
             }
             else
             {
                 UpdateMouseActivationStatus();
+                isCameraSwitching = false;
             }
             blender.BlendToMatrix(MatrixBlender.PerspectiveMatrix, 1f);
         }
 
     }
 
-    /// <summary>
-    /// Salva la posizione nel mondo di gioco per essere usata nel momento in cui deve tornare in free roaming
-    /// </summary>
-    void SavePreviousPositionAndRotation()
+    void MoveCameraOnPosition(Vector3 _pos, Quaternion _rot, TweenCallback _callBack = null)
     {
-        origianlLocation = camTransform.localPosition;
-        origianlRotation = camTransform.rotation;
+        if (_callBack != null)
+            camTransform.DOMove(_pos, cameraAnimationSpeed).OnComplete(_callBack);
+        else
+            camTransform.DOMove(_pos, cameraAnimationSpeed);
+
+        camTransform.DORotateQuaternion(_rot, cameraAnimationSpeed);
     }
 
     /// <summary>

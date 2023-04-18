@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 3
   ActiveHouses: 12
-  TotalGiftInLevel: 12
+  TotalGiftInLevel: 19
   MinScoreToWin: 10
   LevelTimerSec: 240
   EnemySpeed: 6

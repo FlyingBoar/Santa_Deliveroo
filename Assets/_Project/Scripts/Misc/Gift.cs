@@ -1,11 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
-using UnityEditor.Build.Content;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
 
 public class Gift : PoolObjectBase, IDestination
 {

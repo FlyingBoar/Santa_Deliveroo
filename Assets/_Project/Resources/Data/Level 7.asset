@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 7
   ActiveHouses: 13
-  TotalGiftInLevel: 15
+  TotalGiftInLevel: 20
   MinScoreToWin: 12
   LevelTimerSec: 240
-  EnemySpeed: 7
+  EnemySpeed: 6.5
   ActiveEnemies: 3
   UnitsInLevel: 2
   SantaSpeed: 10

@@ -14,5 +14,12 @@ public class GameplayState : StateMachineBehaviour
         LC.GetUIManager().ChangeMenu(UIManager.MenuType.Gameplay);
 
         LC.IsEnteringGameplayStatus();
+        LC.GetCameraController().EnteringGameplay(LC.GetInputController().isRTSView);
+        Cursor.visible = false;
+    }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        Cursor.visible = true;
     }
 }

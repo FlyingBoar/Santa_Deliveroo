@@ -54,8 +54,10 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     void SwitchView()
     {
-        isRTSView = !isRTSView;
-
-        cameraCtrl.SwitchView(isRTSView);
+        if (!cameraCtrl.isCameraSwitching && LevelController.I.IsGameplay)
+        {
+            isRTSView = !isRTSView;
+            cameraCtrl.SwitchView(isRTSView);
+        }
     }
 }

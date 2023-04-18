@@ -5,7 +5,6 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
-using static UnityEditor.Progress;
 
 public class Destination : MonoBehaviour, IDestination
 {

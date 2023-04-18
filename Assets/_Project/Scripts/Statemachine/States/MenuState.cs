@@ -12,5 +12,6 @@ public class MenuState : StateMachineBehaviour
             LC = LevelController.I;
 
         LC.GetUIManager().ChangeMenu(UIManager.MenuType.MainMenu);
+        Cursor.visible = true;
     }
 }
